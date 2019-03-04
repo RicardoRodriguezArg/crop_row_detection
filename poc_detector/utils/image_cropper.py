@@ -21,16 +21,20 @@ class ImageCropper():
 
 if __name__ == "__main__":
     image_cropper = ImageCropper()
-    image = cv2.imread("/home/operador/Documents/Proyects/crop_row_detection/poc_detector/utils/crop_row_image_example.jpeg")
+    working_dir = "/home/operador/Documentos/"
+    image_filename = "crop_row_image_mask.JPG"
+    image = cv2.imread( working_dir + image_filename)
     image_crops = image_cropper.process(image)
     index = 0
-    for chunk in image_crops:
+    for chunck in image_crops:
         image_title = "Image row: {}".format(index)
 
-        cv2.imshow(image_title, chunk)
+        #cv2.imshow(image_title, chunk)
+        cv2.imwrite(working_dir + "_row_image_{}.jpeg".format(index), chunck )
         index = index +1
 
-    cv2.waitkey(0)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 
 
