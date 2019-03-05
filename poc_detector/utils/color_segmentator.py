@@ -5,12 +5,8 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import colors
 from matplotlib import cm
 import os
-import sys
-#from PyQt5.QtWidgets import QApplication, QPushButton
-from PyQt4.QtGui import *
-from PyQt4 import QtGui
-from PyQt4 import QtCore
-from PyQt4.QtCore import *
+
+
 
 class SegmetationByColor():
     def __init__(self, target_directory=None):
@@ -74,7 +70,7 @@ class SegmetationByColor():
         #mask = cv2.inRange(hsv, (20, 110, 100), (160, 225, 225))# 58, 59, 60, 61
         #mask = cv2.inRange(hsv, (35, 100, 70), (160, 225, 225))# 62
         #mask = cv2.inRange(hsv, (35, 100, 70), (160, 225, 225))# 63, 64, 65, 66, 67
-        mask = cv2.inRange(hsv, (35, 100, 70), (160, 225, 225))# 65
+        mask = cv2.inRange(hsv, (25, 100, 100), (125, 225, 225))# 65
         res = cv2.bitwise_and(image,image, mask=mask)
         cv2.imshow('mask',mask)
         cv2.imshow('image',image)
@@ -90,72 +86,11 @@ class SegmetationByColor():
         cv2.imwrite(filename, image)
 
 if __name__ == "__main__":
-    working_path = "/home/alrodriguez/Documents/CRBD/Images/"
-    target_path = "/home/alrodriguez/Documents/CRBD/images_mask_3/"
-    name = "crop_row_067.JPG"
-    
-    app = QApplication([])
-    widget = QWidget()
-   
-
-    widget.resize(600, 800)
-    widget.setWindowTitle("Color Range Segmentator")
-    HBoxlayout  = QtGui.QHBoxLayout(widget)
-    #Rigth Side
-    VBoxlayout  = QtGui.QVBoxLayout()
-    image = QPixmap(working_path + name)
-    image_label = QLabel(widget)
-    image_label.setPixmap(image)
-    
-    mask_label = QLabel(widget)
-    VBoxlayout.addWidget(image_label)
-    VBoxlayout.addWidget(mask_label)
-    
-    #left side config
-    
-    #Upper Values
-    left_layout = QtGui.QVBoxLayout()
-    upper_group_layout = QtGui.QVBoxLayout()
-    upper_value_h = QSlider(Qt.Horizontal)
-    upper_value_s = QSlider(Qt.Horizontal)
-    upper_value_v = QSlider(Qt.Horizontal)
-    left_layout.addWidget(upper_value_h)
-    left_layout.addWidget(upper_value_s)
-    left_layout.addWidget(upper_value_v)
-
-    lower_group_layout = QtGui.QVBoxLayout()
-    lower_value_h = QSlider(Qt.Horizontal)
-    lower_value_s = QSlider(Qt.Horizontal)
-    lower_value_v = QSlider(Qt.Horizontal)
-    left_layout.addWidget(lower_value_h)
-    left_layout.addWidget(lower_value_s)
-    left_layout.addWidget(lower_value_v)
-    #buttoms config
-    update_bottom = QPushButton("Update Image")
-    save_bottom = QPushButton("Save Image")
-    Next_bottom = QPushButton("Next Image")
-
-    left_layout.addWidget(update_bottom)
-    left_layout.addWidget(save_bottom)
-    left_layout.addWidget(Next_bottom)
-
-    #values_slider_group.setLayout(left_layout)
-    VBoxlayout.setLayout(left_layout)
-    
-    
-    HBoxlayout.setLayout(VBoxlayout)
-
-    
-
-
-    widget.setLayout(HBoxlayout)
-
-    widget.resize(image.width(), image.height())
-    widget.show()
-    sys.exit(app.exec_())
-    #color_segmentator = SegmetationByColor()
-    #name = "/home/alrodriguez/Documents/test/test_1.jpg"
-    #color_segmentator.process(working_path, name, target_path)
+    working_path = "/home/operador/Documentos/"
+    target_path = "/home/operador/Documentos/"
+    name = "crop_row_image.jpeg"
+    color_segmentator = SegmetationByColor()
+    color_segmentator.process(working_path, name, target_path)
     #image = cv2.imread("/home/alrodriguez/Documents/CRBD/Images/crop_row_001.JPG")
     #print "Name: {}".format(name)
     #hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
