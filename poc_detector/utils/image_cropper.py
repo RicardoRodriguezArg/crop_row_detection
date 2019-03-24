@@ -10,6 +10,7 @@ class ImageCropper():
         images_chuncks = []
         (h,w) = image.shape[:2]
         chunk_heigth = int(h/self.__region_count)
+        self.__image_frame_height = chunk_heigth
         initial_index = 0
         for index in xrange(self.__region_count):
             initial_index = chunk_heigth*index
@@ -17,7 +18,11 @@ class ImageCropper():
             chunk = image[initial_index : end_index, :w]
             images_chuncks.append(chunk)
         return images_chuncks
-
+    
+    @property
+    def frame_image_height(self):
+        return self.__image_frame_height
+    
 
 if __name__ == "__main__":
     image_cropper = ImageCropper()

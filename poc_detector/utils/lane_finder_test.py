@@ -7,6 +7,7 @@ if __name__ == "__main__":
     print filename
     image = cv2.imread(filename)
     lane_finder.process_image(image)
+    lane_finder.find_simil_points_lanes()
     hull = lane_finder.hull_set
     for point in lane_finder.points_pair_set:
         cv2.line(image,(point[0] , point[1]),(point[2] , point[3]),(0,175,0),2)
