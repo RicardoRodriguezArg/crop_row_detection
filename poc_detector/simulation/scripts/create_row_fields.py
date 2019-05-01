@@ -1,6 +1,16 @@
 
 import bpy
 from bpy import context
+import os
+import sys
+
+dir = os.path.dirname(bpy.data.filepath)
+if not dir in sys.path:
+    sys.path.append(dir)
+
+from scripts_managers import ScriptManager
+
+#importlib.reload(scripts_managers.create_clothoides)
 
 
 def unselect_all_object():
@@ -62,13 +72,22 @@ def add_material_to_active_object(material_name):
 
 #def setup_soil_material(material):
     
-    
+def create_initial_setup():
+    plane_name = 'soil_plane'
+    clear_object(plane_name)
+    clear_object('Cube')
+    unselect_all_object()
+    plane = create_soil_mesh()
+    plane.name = plane_name
+    plane.show_wire = True
+    add_modifier(plane, modifier='Ocean', type='OCEAN')
 
-plane_name = 'soil_plane'
-clear_object(plane_name)
-clear_object('Cube')
-unselect_all_object()
-plane = create_soil_mesh()
-plane.name = plane_name
-plane.show_wire = True
-add_modifier(plane, modifier='Ocean', type='OCEAN')
+
+if __name__ == '__main__':
+    create_initial_setup()
+    scripts_manager = ScriptManager()
+    clothoides_options = {'script_filename' : 'output.txt',
+                            }   
+    scripts_manager.read_clothoides_values(dict_options=clothoides_options)
+    x_points, y_points = scripts_manager.get_sampling_from_points(50)
+    print ("Amount of x points: %d",len(x_points))
