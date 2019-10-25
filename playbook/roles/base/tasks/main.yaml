@@ -1,7 +1,7 @@
 - apt: name={{ item }} state=present
   name: Install base packages
   tags: [packages]
-  with_items: [python3-pip, virtualenv, setuptools]
+  with_items: [python3-pip, python-pip]
   #- name: Upgrade pip
   #  pip: name=pip state=latest
   #  args:
@@ -12,8 +12,8 @@
 - file: {mode: 493, path: /home/ci_operator/.ssh/, state: directory}
   name: Create .ssh folder
 - name: Create target directory for Django
-  file: path=/home/ci_operator state=directory mode=0755
-- copy: {dest: home/ci_operator/, src: ./roles/files/django/requirements.txt}
+  file: path=/home/ci_operator/python-deps state=directory mode=0755
+- copy: {dest: /home/ci_operator/python-deps, src: ./roles/files/django/requirements.txt}
   name: Copy django requirement files
 - name: Installing Django from requirements file
-  pip: {executable: pip-3, requirements: home/ci_operator/requirements.txt}
+  pip: {requirements: '/home/ci_operator/python-deps/requirements.txt'}
