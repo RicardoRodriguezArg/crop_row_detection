@@ -4,6 +4,7 @@
   with_items: [python3-pip]
 - name: Upgrade pip
   pip: name=pip3 state=latest
+    executable: pip-3.3
   tags: [packages]
 - name: Create user
   user: {comment: Used to deploy Django, name: ci_operator, state: present}
@@ -12,4 +13,4 @@
 - copy: {dest: home/ci_operator/requirements.txt, src: ./roles/files/django/requirements.txt}
   name: Copy django requirement files
 - name: Installing Django from requirements file
-  pip: {requirements: home/ci_operator/requirements.txt, executable: pip-3.3}
+  pip: {executable: pip-3.3, requirements: home/ci_operator/requirements.txt}
