@@ -12,4 +12,4 @@
 - copy: {dest: home/ci_operator/requirements.txt, src: ./roles/files/django/requirements.txt}
   name: Copy django requirement files
 - name: Installing Django from requirements file
-  pip3: {requirements: home/ci_operator/requirements.txt}
+  pip: {requirements: home/ci_operator/requirements.txt, executable: pip-3.3}
