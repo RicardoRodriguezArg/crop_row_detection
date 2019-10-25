@@ -1,0 +1,6 @@
+---
+- name: Map_Compiler_Deployer_FrontEnd
+  hosts: all
+  become: yes
+  roles:
+    - base
