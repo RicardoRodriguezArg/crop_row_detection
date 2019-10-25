@@ -20,3 +20,12 @@
     path: "/home/ci_operator/.ssh/"
     state: directory
     mode: 0755
+
+- name: Copy django requirement files
+  copy:
+    src: "./roles/files/django/requirements.txt"
+    dest: home/ci_operator/requirements.txt
+
+- name: Installing Django from requirements file
+  pip:
+    requirements: home/ci_operator/requirements.txt
