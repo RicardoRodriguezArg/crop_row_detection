@@ -1,31 +1,15 @@
-- name: Install base packages
-  apt: name={{ item }} state=installed
-  with_items:
-    - python3-pip
-    
-  tags:
-    - packages
-
+- apt: name={{ item }} state=installed
+  name: Install base packages
+  tags: [packages]
+  with_items: [python3-pip]
 - name: Upgrade pip
   pip: name=pip state=latest
-  tags:
-    - packages
-
+  tags: [packages]
 - name: Create user
-  user:
-    name: "ci_operator"
-    comment: "Used to deploy Django"
-    state: present- name: Create .ssh folder
-  file:
-    path: "/home/ci_operator/.ssh/"
-    state: directory
-    mode: 0755
-
-- name: Copy django requirement files
-  copy:
-    src: "./roles/files/django/requirements.txt"
-    dest: home/ci_operator/requirements.txt
-
+  user: {comment: Used to deploy Django, name: ci_operator, state: present}
+- file: {mode: 493, path: /home/ci_operator/.ssh/, state: directory}
+  name: Create .ssh folder
+- copy: {dest: home/ci_operator/requirements.txt, src: ./roles/files/django/requirements.txt}
+  name: Copy django requirement files
 - name: Installing Django from requirements file
-  pip:
-    requirements: home/ci_operator/requirements.txt
+  pip: {requirements: home/ci_operator/requirements.txt}
