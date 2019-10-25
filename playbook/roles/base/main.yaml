@@ -1,0 +1,22 @@
+- name: Install base packages
+  apt: name={{ item }} state=installed
+  with_items:
+    - python3-pip
+    
+  tags:
+    - packages
+
+- name: Upgrade pip
+  pip: name=pip state=latest
+  tags:
+    - packages
+
+- name: Create user
+  user:
+    name: "ci_operator"
+    comment: "Used to deploy Django"
+    state: present- name: Create .ssh folder
+  file:
+    path: "/home/ci_operator/.ssh/"
+    state: directory
+    mode: 0755
