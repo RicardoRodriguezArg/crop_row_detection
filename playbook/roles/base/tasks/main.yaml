@@ -4,7 +4,7 @@
   with_items: [python3-pip]
 - name: Upgrade pip
   pip: name=pip3 state=latest
-    executable: pip-3.3
+  executable: pip-3.3
   tags: [packages]
 - name: Create user
   user: {comment: Used to deploy Django, name: ci_operator, state: present}
