@@ -1,12 +1,15 @@
 - apt: name={{ item }} state=present
   name: Install base packages
-  tags: [packages]
-  with_items: [python3-pip, python-pip]
-  #- name: Upgrade pip
-  #  pip: name=pip state=latest
-  #  args:
-  #  executable: pip-3.3
-  #tags: [packages]
+  with_items:
+    - python3-pip
+    - python-pip
+  tags:
+    - packages
+ 
+- name: Upgrade pip
+  pip: name=pip state=latest
+  tags:
+   -packages
 - name: Create user
   user: {comment: Used to deploy Django, name: ci_operator, state: present}
 - file: {mode: 493, path: /home/ci_operator/.ssh/, state: directory}
