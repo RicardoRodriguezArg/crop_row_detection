@@ -3,6 +3,7 @@ import configparser
 
 class ServerConfig():
     def __init__(self, ini_file):
+        print("ini file: {}".format(ini_file))
         config = configparser.ConfigParser()
         config.read(ini_file)
         self.__config_dict = self.__create_config_dict(config)
@@ -33,8 +34,9 @@ class ServerConfig():
 
 class Utils:
     def __init__(self, config):
-        section = config['ALLOWED_EXTENSIONS']
-        self.allowed_extensions = section.split(',').strip().lower()
+        section = config['ALLOWED_EXTENSIONS']['extensions']
+        self.allowed_extensions = [str.strip().lower() for str in section.split(',')]
+
 
     def is_file_allowed(self, file):
         extension = file.split('.')[1]

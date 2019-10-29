@@ -5,7 +5,7 @@ from utils import Utils
 
 
 app = Flask(__name__)
-server_config = ServerConfig('./config.ini')
+server_config = ServerConfig('./data/config.ini')
 utils = Utils(server_config.configuration_dict)
 
 
