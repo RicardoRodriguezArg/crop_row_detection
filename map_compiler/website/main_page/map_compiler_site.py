@@ -6,7 +6,7 @@ from utils import Utils
 
 app = Flask(__name__)
 server_config = ServerConfig('./config.ini')
-utils = Utils(server_config)
+utils = Utils(server_config.configuration_dict)
 
 
 @app.route("/")
@@ -22,7 +22,7 @@ def upload_files():
         print("{} is the file name".format(upload.filename))
         filename = upload.filename
         if not (utils.is_file_allowed(filename)):
-            print "Not allowed File: {}".format(filename)
+            print ("Not allowed File: {}".format(filename))
         else:
             print("Save it to:", directory_to_save)
             upload.save(directory_to_save)

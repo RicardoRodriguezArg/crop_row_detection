@@ -1,9 +1,9 @@
-import ConfigParser
+import configparser
 
 
-class ServerConfig:
+class ServerConfig():
     def __init__(self, ini_file):
-        config = ConfigParser()
+        config = configparser.ConfigParser()
         config.read(ini_file)
         self.__config_dict = self.__create_config_dict(config)
 
@@ -28,7 +28,7 @@ class ServerConfig:
 
     @property
     def configuration_dict(self):
-        return self._config_dict
+        return self.__config_dict
 
 
 class Utils:
