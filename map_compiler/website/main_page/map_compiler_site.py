@@ -10,6 +10,7 @@ utils = Utils(server_config.configuration_dict)
 
 
 @app.route("/")
+@app.route("/index")
 def index():
     return render_template("index.html")
 
