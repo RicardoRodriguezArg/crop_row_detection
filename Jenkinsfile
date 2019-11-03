@@ -12,9 +12,17 @@ pipeline {
                 echo 'Testing..'
             }
         }
-        stage('Deploy') {
+        stage('Ansible Deploy') {
             steps {
                 echo 'Deploying....'
+                ansiblePlaybook colorized: true, 
+            	credentialsId: 'ssh-jenkins',
+            	limit: "${HOST_PROVISION}",
+            	installation: 'ansible',
+            	
+            	playbook: 'playbook/playbook.yml', 
+            	sudo: true,
+				sudoUser: 'jenkins'
             }
         }
     }
