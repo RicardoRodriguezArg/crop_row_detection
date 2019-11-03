@@ -18,7 +18,7 @@ pipeline {
                 dir('scripts')
                 {
                 sh 'pwd; ll'
-                sh 'deploy_with_ansible.sh'
+                //sh 'deploy_with_ansible.sh'
                 }
                 
             }
