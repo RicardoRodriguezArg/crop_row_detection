@@ -17,8 +17,8 @@ pipeline {
                 echo 'Deploying....'
                 dir('scripts')
                 {
-                sh 'ls -la'
-                //sh 'deploy_with_ansible.sh'
+                
+                sh './deploy_with_ansible.sh'
                 }
                 
             }
