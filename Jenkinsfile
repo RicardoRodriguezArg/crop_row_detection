@@ -15,7 +15,11 @@ pipeline {
         stage('Ansible Deploy') {
             steps {
                 echo 'Deploying....'
-                sh('deploy_with_ansible.sh')
+                dir(scripts)
+                {
+                sh('deploy_with_ansible.sh')	
+                }
+                
             }
         }
     }
