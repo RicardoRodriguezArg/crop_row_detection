@@ -14,7 +14,7 @@ pipeline {
         }
         stage('Ansible Deploy') {
             steps {
-                echo 'Deploying....'
+                echo 'Executing Deploying Scripts'
                 dir('scripts')
                 {
                 echo 'Applying execution rigths'
