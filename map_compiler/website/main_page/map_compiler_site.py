@@ -4,7 +4,8 @@ from utils import ServerConfig
 from utils import Utils
 
 
-app = Flask(__name__)
+from app import routes
+
 server_config = ServerConfig('./data/config.ini')
 utils = Utils(server_config.configuration_dict)
 
@@ -34,3 +35,6 @@ def upload_files():
 @app.route('/upload/<filename>')
 def send_image(filename):
     return send_from_directory("images", filename)
+
+if __name__ == "__main__":
+    app.run(debug=True)
