@@ -15,13 +15,7 @@ pipeline {
         stage('Ansible Deploy') {
             steps {
                 echo 'Deploying....'
-                ansiblePlaybook colorized: true, 
-            	credentialsId: 'ssh-jenkins'
-            	installation: 'ansible',
-            	
-            	playbook: 'playbook/playbook.yml', 
-            	sudo: true,
-				sudoUser: 'jenkins'
+                sh('deploy_with_ansible.sh')
             }
         }
     }
