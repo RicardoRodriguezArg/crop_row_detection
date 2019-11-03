@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, send_from_directory
 from utils import ServerConfig
 from utils import Utils
 
-from app import routes
+
 
 app = Flask(__name__)
 
