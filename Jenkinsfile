@@ -16,8 +16,7 @@ pipeline {
             steps {
                 echo 'Deploying....'
                 ansiblePlaybook colorized: true, 
-            	credentialsId: 'ssh-jenkins',
-            	limit: "${HOST_PROVISION}",
+            	credentialsId: 'ssh-jenkins'
             	installation: 'ansible',
             	
             	playbook: 'playbook/playbook.yml', 
