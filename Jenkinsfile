@@ -13,7 +13,8 @@ pipeline {
             }
         }
         stage('Ansible Deploy') {
-            steps {
+
+            /*steps {
                 echo 'Executing Deploying Scripts'
                 dir('scripts')
                 {
@@ -24,13 +25,15 @@ pipeline {
                 }
                 
             }
-        }
-        ansiColor('xterm') {
+            */
+            ansiColor('xterm') {
 						    ansiblePlaybook(
 						        playbook: 'playbook/playbook.yml',
 						        inventory: '/etc/ansible/hosts',
 						        credentialsId: '/home/ci_operator/.ssh/id_rsa',
 						        colorized: true)
-}
+							}
+        }
+        
     }
 }
