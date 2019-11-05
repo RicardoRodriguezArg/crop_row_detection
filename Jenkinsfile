@@ -29,9 +29,8 @@ pipeline {
                 ////sh 'chmod +x ./deploy_with_ansible.sh'
                 //echo 'Calling Ansibles scritps'
                 ////sh './deploy_with_ansible.sh'
-                }
+                //}
             }
-            
             
         }
         
