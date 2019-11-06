@@ -30,7 +30,7 @@ pipeline {
               echo 'Calling Ansibles scritps'
               sh './deploy_with_ansible.sh'
               }
-            }
+            
             
         }
         
