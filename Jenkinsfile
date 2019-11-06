@@ -15,6 +15,7 @@ pipeline {
         stage('Ansible Deploy') {
 
             steps {
+            	sh 'ssh ci_operator@192.168.1.10'
             	ansiColor('xterm') {
 						    ansiblePlaybook(
 						        playbook: 'playbook/playbook.yml',
