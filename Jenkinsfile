@@ -21,7 +21,7 @@ pipeline {
 						        inventory: '/etc/ansible/hosts',
 						        credentialsId: '/home/ci_operator/.ssh/id_rsa',
 						        colorized: true)
-			}
+			
             //  echo 'Executing Deploying Scripts'
             //  dir('scripts')
             //  {
@@ -32,7 +32,9 @@ pipeline {
               }
             }
             
-        }
+        }//close stage
+
+
         
     }
 }
