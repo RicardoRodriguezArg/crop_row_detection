@@ -14,7 +14,7 @@ pipeline {
         }
         stage('Ansible Deploy') {
 
-            //steps {
+            steps {
             //	ansiColor('xterm') {
 			//			    ansiblePlaybook(
 			//			        playbook: 'playbook/playbook.yml',
@@ -30,7 +30,7 @@ pipeline {
               echo 'Calling Ansibles scritps'
               sh './deploy_with_ansible.sh'
               }
-            
+            }
             
         }
         
