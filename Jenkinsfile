@@ -15,7 +15,7 @@ pipeline {
         stage('Ansible Deploy') {
 
             steps {
-            	sh 'ssh ci_operator@192.168.1.10'
+            	sh 'export ANSIBLE_CONFIG=/etc/ansible/ansible.cfg'
             	ansiColor('xterm') {
 						    ansiblePlaybook(
 						        playbook: 'playbook/playbook.yml',
