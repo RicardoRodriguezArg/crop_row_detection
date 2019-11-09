@@ -4,6 +4,8 @@
   hosts: map_compiler_machine
   remote_user: jenkins
   tasks:
+    - name: "Create Target Directory"
+      file: {mode: 493, path: /home/jenkins/website_latest/, state: directory}
     - name: "Create target directory to contain the build"
       copy:
         dest: /home/jenkins/website_latest
