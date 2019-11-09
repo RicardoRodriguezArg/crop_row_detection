@@ -2,9 +2,15 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Build Map Compiler Site') {
             steps {
-                echo 'Building..'
+                dir('map_compiler/website')
+                {
+                echo 'Building Python WebSite'
+                sh 'python setup.py sdist'
+                sh 'ls -la'
+                }
+                
             }
         }
         stage('Test') {
@@ -15,28 +21,16 @@ pipeline {
         stage('Ansible Deploy') {
 
             steps {
-            	//sh 'export ANSIBLE_CONFIG=/etc/ansible/ansible.cfg'
-            	//ansiColor('xterm') {
-				//		    ansiblePlaybook(
-				//		        playbook: 'playbook/playbook.yml',
-				//		        inventory: '/etc/ansible/hosts',
-				//		        credentialsId: '/var/lib/jenkins/.ssh/id_rsa.pub',
-				//		        colorized: true)
-			
-            echo 'Executing Deploying Scripts'
-            dir('scripts')
-            {
-             echo 'Applying execution rigths'
-             sh 'chmod +x ./deploy_with_ansible.sh'
-             echo 'Calling Ansibles scritps'
-             sh './deploy_with_ansible.sh'
-            }
-            
-            
-        }//close stage
-
-
-        
-    }
-}
-}
+                echo 'Executing Deploying Scripts'
+                dir('scripts')
+                {
+                    echo 'Preparing Map compiler enviroment'
+                    echo 'Applying execution rigths'
+                    sh 'chmod +x ./deploy_with_ansible.sh'
+                    echo 'Calling Ansibles scritps'
+                    sh './deploy_with_ansible.sh'
+                }//close Dir
+            }//close steps
+        }//close Stage
+    }//close Stages
+}//close Pipeline
