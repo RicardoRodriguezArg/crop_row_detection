@@ -3,6 +3,7 @@
   name: Install Web Site on Target Computer
   hosts: map_compiler_machine
   remote_user: jenkins
+  become: yes
   tasks:
     - name: "Create Target Directory"
       file: {mode: 493, path: /home/jenkins/website_latest/, state: directory}
