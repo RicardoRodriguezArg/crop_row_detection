@@ -18,7 +18,7 @@ pipeline {
                 echo 'Testing..'
             }
         }
-        stage('Ansible Deploy') {
+        stage('Ansible - Deploy web site') {
 
             steps {
                 echo 'Executing Deploying Scripts'
