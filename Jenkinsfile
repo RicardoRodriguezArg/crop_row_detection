@@ -20,7 +20,7 @@ pipeline {
 						    ansiblePlaybook(
 						        playbook: 'playbook/playbook.yml',
 						        inventory: '/etc/ansible/hosts',
-						        credentialsId: '/home/ci_operator/.ssh/id_rsa',
+						        credentialsId: '/var/lib/jenkins/.ssh/id_rsa.pub',
 						        colorized: true)
 			
             //  echo 'Executing Deploying Scripts'
