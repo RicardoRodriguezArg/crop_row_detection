@@ -15,23 +15,23 @@ pipeline {
         stage('Ansible Deploy') {
 
             steps {
-            	sh 'export ANSIBLE_CONFIG=/etc/ansible/ansible.cfg'
-            	ansiColor('xterm') {
-						    ansiblePlaybook(
-						        playbook: 'playbook/playbook.yml',
-						        inventory: '/etc/ansible/hosts',
-						        credentialsId: '/var/lib/jenkins/.ssh/id_rsa.pub',
-						        colorized: true)
+            	//sh 'export ANSIBLE_CONFIG=/etc/ansible/ansible.cfg'
+            	//ansiColor('xterm') {
+				//		    ansiblePlaybook(
+				//		        playbook: 'playbook/playbook.yml',
+				//		        inventory: '/etc/ansible/hosts',
+				//		        credentialsId: '/var/lib/jenkins/.ssh/id_rsa.pub',
+				//		        colorized: true)
 			
-            //  echo 'Executing Deploying Scripts'
-            //  dir('scripts')
-            //  {
-            //  echo 'Applying execution rigths'
-            //  sh 'chmod +x ./deploy_with_ansible.sh'
-            //  echo 'Calling Ansibles scritps'
-            //  sh './deploy_with_ansible.sh'
-              }
+            echo 'Executing Deploying Scripts'
+            dir('scripts')
+            {
+             echo 'Applying execution rigths'
+             sh 'chmod +x ./deploy_with_ansible.sh'
+             echo 'Calling Ansibles scritps'
+             sh './deploy_with_ansible.sh'
             }
+            
             
         }//close stage
 
