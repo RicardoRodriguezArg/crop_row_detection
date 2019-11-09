@@ -9,7 +9,7 @@
     - name: "Create target directory to contain the build"
       copy:
         dest: /home/jenkins/website_latest
-        src: ./../../website/dist/*
+        src: ./../../website/dist/
     - name: "Install Map Compiler Web Site"
       shell: |
           cd /home/jenkins/website_latest
