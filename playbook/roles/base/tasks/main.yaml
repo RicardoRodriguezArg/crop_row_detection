@@ -11,12 +11,12 @@
   tags:
    -packages
 - name: Create user
-  user: {comment: Used to deploy Web Containner Framework, name: ci_operator, state: present}
-- file: {mode: 493, path: /home/ci_operator/.ssh/, state: directory}
+  user: {comment: Used to deploy Web Containner Framework, name: jenkins, state: present}
+- file: {mode: 493, path: /home/jenkins/.ssh/, state: directory}
   name: Create .ssh folder
 - name: Create target directory for Web Containner Framework
-  file: path=/home/ci_operator/python-deps state=directory mode=0755
-- copy: {dest: /home/ci_operator/python-deps, src: ./roles/files/webcontainner/requirements.txt}
+  file: path=/home/jenkins/python-deps state=directory mode=0755
+- copy: {dest: /home/jenkins/python-deps, src: ./roles/files/webcontainner/requirements.txt}
   name: Copy webserver requirement files for python installation
 - name: Installing WebContainner deps from requirements file
-  pip: {requirements: '/home/ci_operator/python-deps/requirements.txt'}
+  pip: {requirements: '/home/jenkins/python-deps/requirements.txt'}
