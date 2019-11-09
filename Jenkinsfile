@@ -8,7 +8,7 @@ pipeline {
                 {
                 echo 'Building Python WebSite'
                 sh 'python setup.py sdist'
-                sh 'ls -la'
+
                 }
                 
             }
