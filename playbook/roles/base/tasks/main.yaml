@@ -10,13 +10,13 @@
   pip: name=pip state=latest
   tags:
    -packages
-#- name: Create user
-#  user: {comment: Used to deploy Web Containner Framework, name: jenkins, state: present}
-#- file: {mode: 493, path: /home/jenkins/.ssh/, state: directory}
-#  name: Create .ssh folder
-#- name: Create target directory for Web Containner Framework
-#  file: path=/home/jenkins/python-deps state=directory mode=0755
-#- copy: {dest: /home/jenkins/python-deps, src: ./roles/files/webcontainner/requirements.txt}
-#  name: Copy webserver requirement files for python installation
-#- name: Installing WebContainner deps from requirements file
-#  pip: {requirements: '/home/jenkins/python-deps/requirements.txt'}
+- name: Create user
+  user: {comment: Used to deploy Web Containner Framework, name: jenkins, state: present}
+- file: {mode: 493, path: /home/jenkins/.ssh/, state: directory}
+  name: Create .ssh folder
+- name: Create target directory for Web Containner Framework
+  file: path=/home/jenkins/python-deps state=directory mode=0755
+- copy: {dest: /home/jenkins/python-deps, src: ./roles/files/webcontainner/requirements.txt}
+  name: Copy webserver requirement files for python installation
+- name: Installing WebContainner deps from requirements file
+  pip: {requirements: '/home/jenkins/python-deps/requirements.txt'}
