@@ -1,4 +1,4 @@
-#
+#!/bin/bash
 DIR="input_data"
 if [ -d "$DIR" ]; then
   # Take action if $DIR exists. #
