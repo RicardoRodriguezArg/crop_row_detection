@@ -38,13 +38,11 @@ pipeline {
                 echo 'Executing ODM Deploy Scripts'
                 dir('scripts')
                 {
-                    dir('open_drone_map')
-                    {
                       echo 'moving scripts to remote'
-                      sh 'chmod +x ./deploy_with_ansible.sh'
+                      sh 'chmod +x ./deploy_odm_scripts.sh'
                       echo 'Calling Ansibles scritps'
-                      sh './deploy_with_ansible.sh'
-                    }//close Script Dir    
+                      sh './deploy_odm_scripts.sh'
+                    
                 }//close Script Dir
             }//close steps
         }//close Stage deploy web site
