@@ -10,5 +10,5 @@ else
   echo "Error: ${DIR} not found. Creating input data folder for images."
   mkdir ${DIR}
 fi
-  echo "Creating ODM docker image"
+  echo "Building ODM docker image"
   docker build -t opendronemap-image .

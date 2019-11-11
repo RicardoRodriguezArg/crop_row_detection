@@ -31,6 +31,23 @@ pipeline {
                     sh './deploy_with_ansible.sh'
                 }//close Dir
             }//close steps
-        }//close Stage
+        }//close Stage deploy web site
+        stage('Ansible - Deploy scritps for ODM docker installation') {
+
+            steps {
+                echo 'Executing ODM Deploy Scripts'
+                dir('scripts')
+                {
+                    dir('open_drone_map')
+                    {
+                      echo 'moving scripts to remote'
+                      sh 'chmod +x ./deploy_with_ansible.sh'
+                      echo 'Calling Ansibles scritps'
+                      sh './deploy_with_ansible.sh'
+                    }//close Script Dir    
+                }//close Script Dir
+            }//close steps
+        }//close Stage deploy web site
+
     }//close Stages
 }//close Pipeline

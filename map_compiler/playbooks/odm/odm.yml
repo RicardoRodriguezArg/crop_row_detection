@@ -1,0 +1,20 @@
+---
+-
+  name: Pull Open Drone Map Docker on Target
+  hosts: map_compiler_machine
+  remote_user: jenkins
+  become: yes
+  tasks:
+    - name: "Create Target Directory"
+      file: {mode: 493, path: /home/jenkins/odm_latest_docker/, state: directory}
+    - name: "Copy script to pull odm on target"
+      copy:
+        dest: /home/jenkins/odm_latest_docker
+        src: ./../../../scripts/open_drone_map/
+    - name: "Execute script to pull ODM"
+      shell: |
+          cd /home/jenkins/odm_latest_docker
+          chmod +x create_odm_docker_image.sh
+          ./create_odm_docker_image.sh
+      args:
+        executable: /bin/bash
