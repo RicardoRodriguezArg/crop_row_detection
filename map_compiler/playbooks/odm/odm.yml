@@ -7,6 +7,12 @@
   tasks:
     - name: "Create Target Directory"
       file: {mode: 493, path: /home/jenkins/odm_latest_docker/, state: directory}
+    - name: "Create volume Images Directory"
+      file: {mode: 493, path: /home/jenkins/odm_latest_docker/images, state: directory}
+    - name: "Create volume Ortho Images Directory"
+      file: {mode: 493, path: /home/jenkins/odm_latest_docker/odm_orthophoto, state: directory}
+    - name: "Create volume texturing Images Directory"
+      file: {mode: 493, path: /home/jenkins/odm_latest_docker/odm_texturing, state: directory}
     - name: "Copy script to pull odm on target"
       copy:
         dest: /home/jenkins/odm_latest_docker
