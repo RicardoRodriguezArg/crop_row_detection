@@ -14,6 +14,7 @@
     - name: "Execute script to pull ODM"
       shell: |
           cd /home/jenkins/odm_latest_docker
+          ls -la
           chmod +x create_odm_docker_image.sh
           ./create_odm_docker_image.sh
       args:
