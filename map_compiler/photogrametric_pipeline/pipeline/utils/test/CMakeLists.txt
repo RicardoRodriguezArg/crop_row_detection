@@ -19,5 +19,6 @@ gtest_add_tests(TARGET      ${PROJECT_NAME}
                 TEST_SUFFIX .noArgs
                 TEST_LIST   noArgsTests
 )
+
  set_tests_properties(${noArgsTests}   PROPERTIES TIMEOUT 10)
 set_tests_properties(${withArgsTests} PROPERTIES TIMEOUT 20)

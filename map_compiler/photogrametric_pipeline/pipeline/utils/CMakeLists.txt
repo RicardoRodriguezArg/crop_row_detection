@@ -72,6 +72,7 @@ export(PACKAGE PIPELINE_UTILS)
 
 
 message (STATUS "INTERFACE_INCLUDE_DIRS: ${INTERFACE_INCLUDE_DIRS}")
-add_subdirectory(test)
+
 enable_testing()
+add_subdirectory(test)
 #-----------------------------------------------------------------------------------
