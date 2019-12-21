@@ -1,6 +1,6 @@
-#include "feature_extraction.h"
-#include "../../utils/src/cv_utils.h"
+#include "feature_extraction/feature_extraction.h"
 #include "opencv2/calib3d/calib3d.hpp"
+#include "utils/cv_utils.h"
 
 #include <algorithm>
 
