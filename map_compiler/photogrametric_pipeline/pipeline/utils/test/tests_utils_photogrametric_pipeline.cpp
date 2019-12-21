@@ -1,6 +1,6 @@
 
-#include "factory/factory_base.h"
-#include "factory/generic_factory.h"
+#include "utils/factory_base.h"
+#include "utils/generic_factory.h"
 
 #include <gtest/gtest.h>
 namespace {
