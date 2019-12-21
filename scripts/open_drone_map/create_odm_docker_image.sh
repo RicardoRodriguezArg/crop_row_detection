@@ -10,6 +10,8 @@ else
 fi
 
 echo "Building ODM docker image"
+docker pull opendronemap/odm:odm_image
+
 docker run -it --rm \
     -v $(pwd)/images:/code/images \
     -v $(pwd)/odm_orthophoto:/code/odm_orthophoto \

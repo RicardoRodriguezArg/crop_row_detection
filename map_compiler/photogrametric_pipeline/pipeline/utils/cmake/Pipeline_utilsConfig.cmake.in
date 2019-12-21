@@ -1,0 +1,7 @@
+get_filename_component(Pipeline_utils_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+if(NOT TARGET Pipeline_utils::Pipeline_utils)
+    include("${Pipeline_utils_CMAKE_DIR}/Pipeline_utils-target.cmake")
+endif()
+set(JSONUtils_LIBRARIES PIPELINE_UTILS::Pipeline_utils)
