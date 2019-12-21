@@ -10,7 +10,8 @@
 namespace NSPipelineUtils {
 
     class Factory {
-        using MapFactory = std::unordered_map<std::string, std::function<FactoryBase *()>>;
+        using MapFactory =
+            std::unordered_map<std::string, std::function<std::unique_ptr<FactoryBase>()>>;
 
         public:
         static Factory &getInstance() {
@@ -20,16 +21,19 @@ namespace NSPipelineUtils {
             return *FactoryPtr;
         }
 
-        void registerFactoryFunction(const std::string &aStringKey,
-                                     std::function<FactoryBase *()> aClassFactoryFunctor) {
+        void registerFactoryFunction(
+            const std::string &aStringKey,
+            std::function<std::unique_ptr<FactoryBase>()> aClassFactoryFunctor) {
 
-            // FactoryRegistryMap[aStringKey] = aClassFactoryFunctor;
+            FactoryRegistryMap->insert({aStringKey, aClassFactoryFunctor});
         }
+
+        std::size_t getInstancesCount() { return FactoryRegistryMap->size(); }
 
         bool isEmpty() const { return FactoryRegistryMap->empty(); }
 
-        FactoryBase *getInstancePtr(const std::string &aClassName) {
-            FactoryBase *instance_ptr = nullptr;
+        std::unique_ptr<FactoryBase> getInstancePtr(const std::string &aClassName) {
+            std::unique_ptr<FactoryBase> instance_ptr = nullptr;
             const auto iter = FactoryRegistryMap->find(aClassName);
             if (iter != FactoryRegistryMap->end()) {
                 instance_ptr = (iter->second)();
@@ -37,9 +41,7 @@ namespace NSPipelineUtils {
             return instance_ptr;
         }
 
-        void releaseResources() {
-            // FactoryRegistryMap->clear();
-        }
+        void releaseResources() { FactoryRegistryMap->clear(); }
 
         static void releaseSingleton() {
             IsNullPtr = true;
