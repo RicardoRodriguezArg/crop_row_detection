@@ -1,9 +1,16 @@
 project(Pipeline_utils)
 cmake_minimum_required(VERSION 3.5.1)
+find_package(OpenCV HINTS "${OPENCV_DIR}" REQUIRED)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
-
-add_library(${PROJECT_NAME} ./src/main.cpp)
+file(GLOB SRCS
+          "./src/*.cpp"
+  )
+add_library(${PROJECT_NAME} ${SRCS})
 add_library(PIPELINE_UTILS::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} gflags
+                      OpenCV
+                      )
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC
@@ -17,7 +24,7 @@ target_include_directories(${PROJECT_NAME}
 #---------------------------------------------------------------------------------
 #export target
 
-set_target_properties(${PROJECT_NAME} PROPERTIES EXPORT_NAME PIPELINE_UTILS)
+set_target_properties(${PROJECT_NAME} PROPERTIES EXPORT_NAME PIPELINE_UTILS_LIB)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
@@ -63,7 +70,7 @@ export(EXPORT ${PROJECT_NAME}-target
 #Register package in user's package registry
 export(PACKAGE PIPELINE_UTILS)
 
-
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 enable_testing()
 add_subdirectory(test)
 #-----------------------------------------------------------------------------------

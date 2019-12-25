@@ -10,6 +10,9 @@ target_link_libraries(${PROJECT_NAME}
     gtest gmock gtest_main
     ${CMAKE_THREAD_LIBS_INIT}
     PIPELINE_UTILS::Pipeline_utils
+    ${OpenCV_LIBS}
+	
+	
 )
 gtest_add_tests(TARGET      ${PROJECT_NAME}
                 TEST_SUFFIX .noArgs

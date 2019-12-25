@@ -1,23 +1,29 @@
 project(keypoint_descriptor_processor)
 cmake_minimum_required(VERSION 3.5.1)
-
+find_package(OpenCV HINTS "${OPENCV_DIR}" REQUIRED)
 # Only link with required opencv modules.
 set(OpenCV_LIBS opencv_core opencv_imgproc opencv_xfeatures2d opencv_features2d opencv_calib3d opencv_highgui )
 # Add source directory
+set (SRCS ${PROJECT_NAME}_SRCS)
+file(GLOB SRCS
+          "./src/*.cpp"
+	)
 
-add_library(${PROJECT_NAME} ./src/main.cpp)
+add_library(${PROJECT_NAME} ${SRCS})
 add_library(PIPELINE::KEYPOINT_PROC_LIB ALIAS ${PROJECT_NAME})
 
 # Link
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} gflags
 	PIPELINE_UTILS::Pipeline_utils
 	PIPELINE::INTERFACES
+	OpenCV
 	)
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC 
     	$<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -66,7 +72,7 @@ export(EXPORT ${PROJECT_NAME}-target
 	   FILE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-target.cmake 
 	   NAMESPACE PIPELINE::)
 export(PACKAGE KEYPOINT_PROC_LIB)
-
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 #adding testing directory
 enable_testing()
 add_subdirectory(tests)
