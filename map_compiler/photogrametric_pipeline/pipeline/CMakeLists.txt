@@ -8,7 +8,7 @@ add_definitions(-Wall -Wextra -pedantic)
 #finding external libraries and turning as imported target
 include (cmake/GMockConfig.cmake)
 find_package(GTest REQUIRED)
-find_package(OpenCV HINTS "${OPENCV_DIR}" REQUIRED)
+
 add_library(GTest INTERFACE IMPORTED)
 set_property(TARGET GTest PROPERTY
     INTERFACE_INCLUDE_DIRECTORIES ${GTEST_INCLUDE_DIRS})

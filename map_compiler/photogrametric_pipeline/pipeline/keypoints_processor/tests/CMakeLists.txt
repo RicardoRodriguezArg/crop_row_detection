@@ -1,7 +1,18 @@
 project(feature_extraction_test)
 cmake_minimum_required(VERSION 3.5)
 find_package(OpenCV HINTS "${OPENCV_DIR}" REQUIRED)
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp
+				
+			)
+
+set(RESOURCE_FILES
+  				resources/image_a.jpg
+				resources/image_b.jpg
+)
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${RESOURCE_FILES}
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources)
+
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 target_link_libraries(${PROJECT_NAME}
@@ -18,7 +29,7 @@ gtest_add_tests(TARGET      ${PROJECT_NAME}
                 TEST_LIST   noArgsTests
 )
 
- set_tests_properties(${noArgsTests}   PROPERTIES TIMEOUT 10)
+set_tests_properties(${noArgsTests}   PROPERTIES TIMEOUT 10)
 set_tests_properties(${withArgsTests} PROPERTIES TIMEOUT 20)
 
 

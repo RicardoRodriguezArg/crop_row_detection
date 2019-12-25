@@ -40,16 +40,21 @@ namespace NSFeatureExtraction {
         KeyPointId getKeyPointID() const;
         void setKeyPointId(const std::string &image_filename, const KeyPoint &local_keypoint);
         void addExternalReference(const KeyPointId external_keypoint_id);
+        const std::vector<cv::KeyPoint> getKeyPointContainer() const;
+        const cv::Mat getKeyPointDescriptor() const;
 
         private:
+        void checkPreliminars();
+        void checkImageIsNotEmpty();
+        void checkMatcherIsSet();
         const int max_features_;
         const float match_percent_aceptable_;
         std::vector<cv::KeyPoint> keyPoints_;
         cv::Mat descriptor_;
         // ORB Detector
         cv::Ptr<cv::Feature2D> orb_detector_;
-        cv::Ptr<cv::DescriptorMatcher> matcher_;
-        cv::Mat image_;
+        cv::Ptr<cv::DescriptorMatcher> matcher_ = nullptr;
+        cv::Mat image_ = {};
         KeyPointId keypoint_id_ = {};
         // std::unordered_set<KeyPointId> matched_external_keypoints_;
     };

@@ -1,19 +1,56 @@
 #include "keypoints_processor/feature_extraction.h"
+#include "keypoints_processor/feature_exceptions.h"
 #include "opencv2/calib3d/calib3d.hpp"
 #include "utils/cv_utils.h"
-
 #include <algorithm>
+#include <exception>
 
 NSFeatureExtraction::FeatureExtraction::FeatureExtraction(
     const int max_features = 500, const float match_percent_aceptable = 0.15f,
     const std::string &descriptor_name = "FlannBased")
     : max_features_(max_features), orb_detector_(cv::ORB::create(max_features)),
-      matcher_(cv::DescriptorMatcher::create(descriptor_name)),
-      match_percent_aceptable_(match_percent_aceptable) {}
+
+      match_percent_aceptable_(match_percent_aceptable) {
+    // TODO: Check at compile time string is not empty
+    if (!descriptor_name.empty()) {
+        matcher_ = cv::DescriptorMatcher::create(descriptor_name);
+    }
+}
+
+void NSFeatureExtraction::FeatureExtraction::checkPreliminars() {
+    checkImageIsNotEmpty();
+    checkMatcherIsSet();
+}
 
 void NSFeatureExtraction::FeatureExtraction::detectFeatures() {
+    checkPreliminars();
+
     const auto &&image_in_grey_scale = NSFeatureExtraction::Utils::convertToGreyScale(image_);
     orb_detector_->detectAndCompute(image_in_grey_scale, cv::Mat(), keyPoints_, descriptor_);
+}
+
+const std::vector<cv::KeyPoint>
+NSFeatureExtraction::FeatureExtraction::getKeyPointContainer() const {
+    return keyPoints_;
+}
+
+const cv::Mat NSFeatureExtraction::FeatureExtraction::getKeyPointDescriptor() const {
+    return descriptor_;
+}
+
+void NSFeatureExtraction::FeatureExtraction::checkImageIsNotEmpty() {
+    if (image_.empty()) {
+        std::string errorMessage = std::string("Error: Empty Raw Image Mat");
+        throw std::runtime_error(errorMessage);
+    }
+}
+
+void NSFeatureExtraction::FeatureExtraction::checkMatcherIsSet() {
+
+    if (image_.empty()) {
+        std::string errorMessage = std::string("Error: Matcher not Init or not define");
+        throw FeatureException(errorMessage);
+    }
 }
 
 void NSFeatureExtraction::FeatureExtraction::setRawImage(const cv::Mat &raw_image) {
