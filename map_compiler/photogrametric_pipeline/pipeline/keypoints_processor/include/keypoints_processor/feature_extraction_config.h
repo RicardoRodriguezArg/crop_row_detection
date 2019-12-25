@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __PIPELINE_FEATURE_EXTRACTION_CONFIG_H__
+#define __PIPELINE_FEATURE_EXTRACTION_CONFIG_H__
 #include <string>
 namespace NSConfig {
     struct FeatureExtracionConfig {
@@ -20,3 +21,4 @@ namespace NSConfig {
         const std::string descriptor_name_;
     };
 } // namespace NSConfig
+#endif

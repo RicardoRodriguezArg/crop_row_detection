@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __PIPELINE_FEATURE_EXTRACTION_H__
+#define __PIPELINE_FEATURE_EXTRACTION_H__
 #include "opencv2/features2d.hpp"
 #include "opencv2/xfeatures2d.hpp"
 #include <cstdint>
@@ -53,3 +54,4 @@ namespace NSFeatureExtraction {
         // std::unordered_set<KeyPointId> matched_external_keypoints_;
     };
 } // namespace NSFeatureExtraction
+#endif

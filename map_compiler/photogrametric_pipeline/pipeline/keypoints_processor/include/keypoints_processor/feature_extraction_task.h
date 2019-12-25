@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __PIPELINE_FEATURE_EXTRACTION_TASK_H__
+#define __PIPELINE_FEATURE_EXTRACTION_TASK_H__
 
 #include "feature_extraction.h"
 #include <future>
@@ -40,3 +41,4 @@ namespace NSFeatureExtraction {
         std::unique_ptr<FeatureExtraction> feature_extraction_ptr;
     };
 } // namespace NSFeatureExtraction
+#endif

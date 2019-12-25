@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __PIPELINE_FEATURE_PROCESSING_H__
+#define __PIPELINE_FEATURE_PROCESSING_H__
+
 #include "feature_extraction_config.h"
 #include "feature_extraction_task.h"
 #include "interfaces/pipeline_process_interface.h"
@@ -17,3 +19,4 @@ namespace NSFeatureExtraction {
         std::vector<FeatureExtractionTask> feature_container_ = {};
     };
 } // namespace NSFeatureExtraction
+#endif
