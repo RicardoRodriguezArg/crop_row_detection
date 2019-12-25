@@ -3,7 +3,7 @@
 #include <mutex>
 #include <tuple>
 #include <unordered_map>
-NSFeatureExtraction {
+namespace NSFeatureExtraction {
     /**
      * @brief      Singleton class repository for
      * multithreading access
@@ -40,4 +40,4 @@ NSFeatureExtraction {
     };
     std::unique_ptr<KeyPointsRepository> KeyPointsRepository::instance_ = nullptr;
     std::once_flag KeyPointsRepository::once_;
-}
+} // namespace NSFeatureExtraction

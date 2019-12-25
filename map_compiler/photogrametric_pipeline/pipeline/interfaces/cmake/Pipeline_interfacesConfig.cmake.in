@@ -1,0 +1,7 @@
+get_filename_component(keypoint_descriptor_processor_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+if(NOT TARGET KP_PROCESSOR::KP_PROCESSOR)
+    include("${Pipeline_utils_CMAKE_DIR}/keypoint_descriptor_processor-target.cmake")
+endif()
+set(TARGET KP_PROCESSOR_LIBRARIES TARGET KP_PROCESSOR::TARGET KP_PROCESSOR)

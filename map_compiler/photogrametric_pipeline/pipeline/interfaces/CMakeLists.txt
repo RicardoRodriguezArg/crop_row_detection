@@ -1,21 +1,16 @@
 project(Pipeline_interfaces)
 cmake_minimum_required(VERSION 3.5.1)
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 
 add_definitions(-Wall -Wextra -pedantic)
-add_library(${PROJECT_NAME} ./src/main.cpp)
+add_library(${PROJECT_NAME} INTERFACE)
 add_library(PIPELINE::INTERFACES ALIAS ${PROJECT_NAME})
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+
 
 target_include_directories(${PROJECT_NAME}
-    PUBLIC
-       $<INSTALL_INTERFACE:include>
-       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-        
+    INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
 
 )
 #---------------------------------------------------------------------------------
@@ -71,8 +66,3 @@ export(
 export(PACKAGE PIPELINE_INTERFACES)
 
 
-
-message (STATUS "INTERFACE_INCLUDE_DIRS: ${INTERFACE_INCLUDE_DIRS}")
-
-enable_testing()
-add_subdirectory(test)

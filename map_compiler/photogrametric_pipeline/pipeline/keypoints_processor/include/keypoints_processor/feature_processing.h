@@ -1,7 +1,7 @@
 #pragma once
-#include "../../interfaces/src/pipeline_process_interface.h"
 #include "feature_extraction_config.h"
 #include "feature_extraction_task.h"
+#include "interfaces/pipeline_process_interface.h"
 namespace NSFeatureExtraction {
     class FeatureProcessing : public IPipelineProcess {
         public:
