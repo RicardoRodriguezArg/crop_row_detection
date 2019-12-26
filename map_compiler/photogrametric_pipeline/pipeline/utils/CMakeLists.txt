@@ -1,6 +1,6 @@
 project(Pipeline_utils)
 cmake_minimum_required(VERSION 3.5.1)
-find_package(OpenCV HINTS "${OPENCV_DIR}" REQUIRED)
+
 list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_SOURCE_DIR}/cmake)
 file(GLOB SRCS
           "./src/*.cpp"
@@ -8,7 +8,7 @@ file(GLOB SRCS
 add_library(${PROJECT_NAME} ${SRCS})
 add_library(PIPELINE_UTILS::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} gflags
+target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS} gflags
                       OpenCV
                       )
 

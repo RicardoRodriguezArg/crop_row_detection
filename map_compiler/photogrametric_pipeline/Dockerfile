@@ -20,12 +20,18 @@ RUN apt install openexr -y
 
 RUN mkdir Documents
 WORKDIR Documents
+
 #install cmake 3.17
 RUN wget https://cmake.org/files/v3.16/cmake-3.16.0-Linux-x86_64.sh
 RUN chmod +x ./cmake-3.16.0-Linux-x86_64.sh
 RUN mkdir -p /opt/cmake
 RUN ./cmake-3.16.0-Linux-x86_64.sh --prefix=/opt/cmake --skip-license
 RUN ln -s /opt/cmake/bin/cmake /usr/bin/cmake
+#Installing GFlags
+WORKDIR /home/Documents
+RUN git clone https://github.com/gflags/gflags.git
+RUN cd gflags && mkdir build && cd build && cmake .. -DBUILD_SHARED_LIBS=ON && make && make install && ldconfig
+
 #opencv
 RUN git clone https://github.com/opencv/opencv.git
 RUN git clone https://github.com/opencv/opencv_contrib.git
@@ -76,10 +82,7 @@ RUN cd PDAL && mkdir build && cd build && cmake .. && make && make install
 WORKDIR /home/Documents
 RUN git clone https://github.com/laurentkneip/opengv.git
 RUN cd opengv && mkdir build && cd build && cmake .. && make && make install
-#Installing GFlags
-WORKDIR /home/Documents
-RUN git clone https://github.com/gflags/gflags.git
-RUN cd gflags && mkdir build && cd build && cmake .. && make && make install
+
 #Installing GTest & GMock
 WORKDIR /home/Documents
 RUN git clone https://github.com/google/googletest.git

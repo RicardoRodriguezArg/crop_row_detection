@@ -1,8 +1,7 @@
 project(keypoint_descriptor_processor)
 cmake_minimum_required(VERSION 3.5.1)
-find_package(OpenCV HINTS "${OPENCV_DIR}" REQUIRED)
+
 # Only link with required opencv modules.
-set(OpenCV_LIBS opencv_core opencv_imgproc opencv_xfeatures2d opencv_features2d opencv_calib3d opencv_highgui )
 # Add source directory
 set (SRCS ${PROJECT_NAME}_SRCS)
 file(GLOB SRCS
@@ -13,10 +12,10 @@ add_library(${PROJECT_NAME} ${SRCS})
 add_library(PIPELINE::KEYPOINT_PROC_LIB ALIAS ${PROJECT_NAME})
 
 # Link
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} gflags
+target_link_libraries(${PROJECT_NAME} PRIVATE 
 	PIPELINE_UTILS::Pipeline_utils
 	PIPELINE::INTERFACES
-	OpenCV
+	${OpenCV_LIBS}
 	)
 
 target_include_directories(${PROJECT_NAME}

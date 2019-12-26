@@ -16,10 +16,10 @@ set_property(TARGET GTest PROPERTY
 find_package(Threads REQUIRED)    
 add_library(Threads INTERFACE IMPORTED)
 
-find_package(OpenCV HINTS "${OPENCV_DIR}" REQUIRED)
+find_package(OpenCV REQUIRED)
 add_library(OpenCV INTERFACE IMPORTED)
 set_property(TARGET OpenCV PROPERTY
-    INTERFACE_INCLUDE_DIRECTORIES ${OPENCV_DIR})
+    INTERFACE_INCLUDE_DIRECTORIES ${OpenCV_INCLUDE_DIRS})
 
 find_package(gflags REQUIRED)
 #add_library(gflags INTERFACE IMPORTED)

@@ -1,4 +1,5 @@
 
+#include "utils/cv_utils.h"
 #include "utils/factory_base.h"
 #include "utils/generic_factory.h"
 
@@ -61,6 +62,18 @@ namespace {
         factory.releaseResources();
         EXPECT_EQ(true, factory.isEmpty());
         NSPipelineUtils::Factory::releaseSingleton();
+    }
+
+    TEST(CV_UTILS_TESTS, LOAD_IMAGE_OK) {
+        const auto filename{"/home/Documents/workspace/build/utils/test/resources/image_a.jpg"};
+        const auto image = NSFeatureExtraction::Utils::loadImageFromFileName(filename);
+        EXPECT_EQ(false, image.empty());
+    }
+
+    TEST(CV_UTILS_TESTS, LOAD_IMAGE_FAIL) {
+        const auto filename{".\\resource\\image_.jpg"};
+        const auto image = NSFeatureExtraction::Utils::loadImageFromFileName(filename);
+        EXPECT_EQ(true, image.empty());
     }
 } // namespace
 int main(int argc, char **argv) {
