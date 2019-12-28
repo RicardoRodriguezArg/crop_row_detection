@@ -3,21 +3,21 @@ FROM nvidia/cuda:9.1-devel
 #install Opencv Dependencies
 RUN apt-get update
 #cmake for c++17
-
 RUN apt-get update
-RUN apt-get install gcc-9 g++-9
-
-RUN apt-get install apt-transport-https ca-certificates gnupg software-properties-common wget -y
+RUN apt-get install software-properties-common -y
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test
+RUN apt-get install apt-transport-https ca-certificates gnupg wget -y
 RUN add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security main"
-RUN apt update
-RUN apt install python3-dev python3-numpy -y
-RUN apt install git build-essential cmake unzip pkg-config -y
-RUN apt install libjpeg-dev libpng-dev libtiff-dev libjasper-dev libjasper1 libavcodec-dev libavformat-dev libswscale-dev -y
-RUN apt install libv4l-dev libxvidcore-dev libx264-dev libgtk-3-dev -y
-RUN apt install libatlas-base-dev gfortran -y
-RUN apt install libtbb2 libtbb-dev -y
-RUN apt install openexr -y
-
+RUN apt-get update
+RUN apt-get install python3-dev python3-numpy -y
+RUN apt-get install git unzip pkg-config -y
+RUN apt-get install libjpeg-dev libpng-dev libtiff-dev libjasper-dev libjasper1 libavcodec-dev libavformat-dev libswscale-dev -y
+RUN apt-get install libv4l-dev libxvidcore-dev libx264-dev libgtk-3-dev -y
+RUN apt-get install libatlas-base-dev gfortran -y
+RUN apt-get install libtbb2 libtbb-dev -y
+RUN apt-get install openexr -y
+RUN apt-get install gcc-9 g++-9 -y
+RUN apt-get install libflann-dev libboost-all-dev libsuitesparse-dev libgoogle-glog-dev -y
 RUN mkdir Documents
 WORKDIR Documents
 
@@ -33,8 +33,10 @@ RUN git clone https://github.com/gflags/gflags.git
 RUN cd gflags && mkdir build && cd build && cmake .. -DBUILD_SHARED_LIBS=ON && make && make install && ldconfig
 
 #opencv
+WORKDIR /home/Documents
 RUN git clone https://github.com/opencv/opencv.git
 RUN git clone https://github.com/opencv/opencv_contrib.git
+RUN git clone https://github.com/eigenteam/eigen-git-mirror.git eigen
 
 RUN wget https://bootstrap.pypa.io/get-pip.py
 RUN python3 get-pip.py
@@ -48,16 +50,18 @@ RUN cd opencv && mkdir build&& cd build && cmake -D CMAKE_BUILD_TYPE=RELEASE \
     -D BUILD_EXAMPLES=ON .. && make && make install && ldconfig
 
 #install Ceres
+
 WORKDIR /home/Documents
-RUN apt-get install libflann-dev libboost-all-dev libeigen3-dev libsuitesparse-dev libgoogle-glog-dev -y
+
+RUN cd eigen && mkdir build && cd build && cmake .. && make && make install
+#install VTK
+WORKDIR /home/Documents
 RUN git clone https://ceres-solver.googlesource.com/ceres-solver
 WORKDIR ceres-solver
 RUN mkdir build && cd build && cmake .. && make && make install
 #install eigen
 WORKDIR /home/Documents
-#RUN git clone https://github.com/eigenteam/eigen-git-mirror.git
-#RUN cd eigen-git-mirror && mkdir build && cd build & cmake .. && make && make install
-#install VTK
+#
 
 RUN wget http://www.vtk.org/files/release/7.1/VTK-7.1.0.tar.gz
 RUN apt-get install vim freeglut3-dev libgtest-dev -y
