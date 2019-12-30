@@ -44,7 +44,7 @@ namespace Pipeline_keypoints_processor {
         // add
         const auto keypoint_container = feature_extraction.getKeyPointContainer();
         const auto keypoint_descriptor = feature_extraction.getKeyPointDescriptor();
-        ASSERT_EQ(keypoint_container.size(), keypoint_container.size())
+        ASSERT_EQ(1, keypoint_container.size())
             << "detected keypoints for image a is " << keypoint_container.size();
     }
 } // namespace Pipeline_keypoints_processor
