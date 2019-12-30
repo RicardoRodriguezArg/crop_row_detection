@@ -38,6 +38,7 @@ namespace Pipeline_keypoints_processor {
         const std::string image_filename{"resources/image_a.png"};
         // TODO:encapsulate and test
         auto image_raw_color = NSFeatureExtraction::Utils::loadImageFromFileName(image_filename);
+        EXPECT_EQ(false, image_raw_color.empty());
         feature_extraction.setRawImage(image_raw_color);
         EXPECT_NO_THROW(feature_extraction.detectFeatures());
         // add
