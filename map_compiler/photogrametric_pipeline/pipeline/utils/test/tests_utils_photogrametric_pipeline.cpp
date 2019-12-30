@@ -65,15 +65,21 @@ namespace {
     }
 
     TEST(CV_UTILS_TESTS, LOAD_IMAGE_OK) {
-        const auto filename{"/home/Documents/workspace/build/utils/test/resources/image_a.jpg"};
+        const auto filename{"resources/image_a.png"};
         const auto image = NSFeatureExtraction::Utils::loadImageFromFileName(filename);
         EXPECT_EQ(false, image.empty());
     }
 
     TEST(CV_UTILS_TESTS, LOAD_IMAGE_FAIL) {
-        const auto filename{".\\resource\\image_.jpg"};
+        const auto filename{"resource/image_.png"};
         const auto image = NSFeatureExtraction::Utils::loadImageFromFileName(filename);
         EXPECT_EQ(true, image.empty());
+    }
+    
+    TEST(CV_UTILS_TESTS, CONVERT_IMAGE_TO_GREY_SCALE_OK) {
+        const auto filename{"resource/image_a.png"};
+        const auto image = NSFeatureExtraction::Utils::convertToGreyScale(filename);
+        EXPECT_EQ(false, image.empty());
     }
 } // namespace
 int main(int argc, char **argv) {
