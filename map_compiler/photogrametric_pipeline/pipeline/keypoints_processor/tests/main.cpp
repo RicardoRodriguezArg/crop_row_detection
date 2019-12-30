@@ -35,7 +35,7 @@ namespace Pipeline_keypoints_processor {
         NSFeatureExtraction::FeatureExtraction feature_extraction{
             max_features, match_percent_aceptable, descriptor_name};
         // load image mat from file
-        const std::string image_filename{"image_a.jpg"};
+        const std::string image_filename{"image_a.png"};
         // TODO:encapsulate and test
         auto image_raw_color = NSFeatureExtraction::Utils::loadImageFromFileName(image_filename);
         feature_extraction.setRawImage(image_raw_color);
