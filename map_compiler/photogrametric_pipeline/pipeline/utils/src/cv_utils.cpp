@@ -1,13 +1,11 @@
 #include "utils/cv_utils.h"
 #include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
-#include <limits.h>
-#include <stdio.h>
-#include <unistd.h>
 
 cv::Mat NSFeatureExtraction::Utils::convertToGreyScale(const cv::Mat &image) {
     cv::Mat result_image;
-    cv::cvtColor(image, result_image, cv::COLOR_BGR2GRAY);
+    cv::cvtColor(image, cv::COLOR_BGR2GRAY);
     return result_image;
 }
 
