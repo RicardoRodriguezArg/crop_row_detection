@@ -78,8 +78,10 @@ namespace {
     
     TEST(CV_UTILS_TESTS, CONVERT_IMAGE_TO_GREY_SCALE_OK) {
         const auto filename{"resource/image_a.png"};
-        const auto image = NSFeatureExtraction::Utils::convertToGreyScale(filename);
+        const auto image = NSFeatureExtraction::Utils::loadImageFromFileName(filename);
         EXPECT_EQ(false, image.empty());
+        const auto grey_image = NSFeatureExtraction::Utils::convertToGreyScale(image);
+        EXPECT_EQ(false, grey_image.empty());
     }
 } // namespace
 int main(int argc, char **argv) {
