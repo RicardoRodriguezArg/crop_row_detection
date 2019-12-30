@@ -53,7 +53,7 @@ namespace NSFeatureExtraction {
         cv::Mat descriptor_;
         // ORB Detector
         cv::Ptr<cv::Feature2D> orb_detector_;
-        cv::Ptr<cv::DescriptorMatcher> matcher_ = std::nullptr_t;
+        cv::Ptr<cv::DescriptorMatcher> matcher_;
         cv::Mat image_ = {};
         KeyPointId keypoint_id_ = {};
         // std::unordered_set<KeyPointId> matched_external_keypoints_;
