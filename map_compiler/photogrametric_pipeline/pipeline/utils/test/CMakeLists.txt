@@ -2,8 +2,8 @@ project(photogrametric_utils_tests)
 cmake_minimum_required(VERSION 3.1)
 
 set(RESOURCE_FILES
-  				resources/image_a.jpg
-				resources/image_b.jpg
+  				resources/image_a.png
+				resources/image_a.png
 )
 set(CMAKE_CXX_STANDARD 14)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${RESOURCE_FILES}
