@@ -25,8 +25,8 @@ void NSFeatureExtraction::FeatureExtraction::checkPreliminars() {
 void NSFeatureExtraction::FeatureExtraction::detectFeatures() {
     checkPreliminars();
 
-    const auto &&image_in_grey_scale = NSFeatureExtraction::Utils::convertToGreyScale(image_);
-    orb_detector_->detectAndCompute(image_in_grey_scale, cv::Mat(), keyPoints_, descriptor_);
+    /*const auto &&image_in_grey_scale = NSFeatureExtraction::Utils::convertToGreyScale(image_);
+    orb_detector_->detectAndCompute(image_in_grey_scale, cv::Mat(), keyPoints_, descriptor_);*/
 }
 
 const std::vector<cv::KeyPoint>
