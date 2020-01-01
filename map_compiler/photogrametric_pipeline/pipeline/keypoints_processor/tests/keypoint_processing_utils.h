@@ -324,7 +324,7 @@ int matrix_data[116][32] = {
      164, 200, 10,  220, 1,   163, 199, 229, 103, 173}
 
 };
-const cv::Mat REFERENCE_DESCRIPTOR_MATRIX{32, 116};
+const cv::Mat REFERENCE_DESCRIPTOR_MATRIX{32, 116, matrix_data};
 /*
 
 
