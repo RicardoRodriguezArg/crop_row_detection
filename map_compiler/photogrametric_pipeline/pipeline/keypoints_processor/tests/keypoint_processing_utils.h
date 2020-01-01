@@ -3,7 +3,7 @@
 #include <opencv2/opencv.hpp>
 namespace Pipeline_keypoints_processor {
 namespace utils {
-int matrix_data[116][32] = {
+const int matrix_data[32][116] = {
     {252, 112, 253, 100, 36,  14, 75,  16, 96,  136, 183, 8,  83, 19,  209, 59,
      30,  196, 76,  106, 137, 96, 225, 8,  195, 233, 97,  20, 96, 179, 66,  33},
     {252, 112, 253, 100, 36,  14, 75,  16, 96,  136, 183, 8,  83, 19,  209, 59,
