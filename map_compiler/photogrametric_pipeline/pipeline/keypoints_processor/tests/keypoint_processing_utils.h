@@ -239,4 +239,5 @@ constexpr cv::Mat REFERENCE_DESCRIPTOR_MATRIX{32, 116};
 182, 125, 149,  80, 130, 248, 164, 200,  10, 220,   1, 163, 199, 229, 103, 173]
 }*/
 }  // namespace utils
+}  // namespace Pipeline_keypoints_processor
 #endif
