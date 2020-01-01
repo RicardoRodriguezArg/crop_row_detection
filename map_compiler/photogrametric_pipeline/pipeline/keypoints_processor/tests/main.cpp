@@ -67,7 +67,7 @@ namespace Pipeline_keypoints_processor {
         // add
         const auto keypoint_container = feature_extraction.getKeyPointContainer();
         const auto keypoint_descriptor = feature_extraction.getKeyPointDescriptor();
-        ASSERT_EQ(216, keypoint_container.size())
+        ASSERT_EQ(116, keypoint_container.size())
             << "detected keypoints for test image is " << keypoint_container.size();
         cv::Size expected_size{32,216};
         ASSERT_EQ(expected_size, keypoint_descriptor.size())
