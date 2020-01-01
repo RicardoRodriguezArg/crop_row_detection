@@ -7,7 +7,7 @@
 //#include "keypoints_processor/keypoints_repository.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-
+#include "keypoint_processing_utils.h"
 namespace Pipeline_keypoints_processor {
     TEST(KEYPOINT_EXTRACTION_CLASSIC_APPROACH, KEYPOINT_PROCESSOR_EXCEPTION) {
         constexpr int max_features{};
