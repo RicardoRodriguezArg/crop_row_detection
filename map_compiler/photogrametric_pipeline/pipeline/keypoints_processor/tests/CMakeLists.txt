@@ -1,7 +1,8 @@
 project(feature_extraction_test)
 cmake_minimum_required(VERSION 3.5)
 find_package(OpenCV REQUIRED)
-add_executable(${PROJECT_NAME} main.cpp)
+set(HDRS keypoint_processing_utils.h)
+add_executable(${PROJECT_NAME} main.cpp ${HDRS})
 
 set(RESOURCE_FILES resources/image_a.png resources/chess_board_test.png)
 
@@ -20,6 +21,7 @@ target_link_libraries(
   PIPELINE_UTILS::Pipeline_utils
   PIPELINE::KEYPOINT_PROC_LIB
   PIPELINE::INTERFACES)
+
 gtest_add_tests(TARGET ${PROJECT_NAME} TEST_SUFFIX .noArgs TEST_LIST
                 noArgsTests)
 
