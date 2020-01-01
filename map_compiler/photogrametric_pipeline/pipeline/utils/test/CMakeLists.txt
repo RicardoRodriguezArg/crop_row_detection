@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.1)
 
 set(RESOURCE_FILES
   				resources/image_a.png
-				resources/image_a.png
+
 )
 set(CMAKE_CXX_STANDARD 14)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${RESOURCE_FILES}

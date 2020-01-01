@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 find_package(OpenCV REQUIRED)
 add_executable(${PROJECT_NAME} main.cpp)
 
-set(RESOURCE_FILES resources/image_a.png resources/image_a.png)
+set(RESOURCE_FILES resources/image_a.png resources/chess_board_test.gif)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${RESOURCE_FILES}
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources)
