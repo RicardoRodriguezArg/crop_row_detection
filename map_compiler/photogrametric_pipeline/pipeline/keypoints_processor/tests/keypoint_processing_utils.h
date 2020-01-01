@@ -3,7 +3,7 @@
 #include <opencv2/opencv.hpp>
 namespace Pipeline_keypoints_processor {
 namespace utils {
-constexpr cv::Mat REFERENCE_DESCRIPTOR_MATRIX{32, 116};
+const cv::Mat REFERENCE_DESCRIPTOR_MATRIX{32, 116};
 /*
 [252, 112, 253, 100,  36,  14,  75,  16,  96, 136, 183,   8,  83,  19, 209,  59,
 30, 196,  76, 106, 137,  96, 225,   8, 195, 233,  97,  20,  96, 179,  66,  33;
