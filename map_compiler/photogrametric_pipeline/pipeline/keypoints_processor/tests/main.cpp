@@ -58,7 +58,7 @@ namespace Pipeline_keypoints_processor {
         NSFeatureExtraction::FeatureExtraction feature_extraction{
             max_features, match_percent_aceptable, descriptor_name};
         // load image mat from file
-        const std::string image_filename{"resources/chess_board_test.gif"};
+        const std::string image_filename{"resources/chess_board_test.png"};
         // TODO:encapsulate and test
         auto image_raw_color = NSFeatureExtraction::Utils::loadImageFromFileName(image_filename);
         EXPECT_EQ(false, image_raw_color.empty());
