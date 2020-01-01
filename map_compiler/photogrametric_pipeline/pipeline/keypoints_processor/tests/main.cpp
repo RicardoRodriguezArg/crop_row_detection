@@ -65,13 +65,14 @@ namespace Pipeline_keypoints_processor {
         feature_extraction.setRawImage(image_raw_color);
         EXPECT_NO_THROW(feature_extraction.detectFeatures());
         // add
-        const auto keypoint_container = feature_extraction.getKeyPointContainer();
-        const auto keypoint_descriptor = feature_extraction.getKeyPointDescriptor();
+        const std::vector<cv::KeyPoint> keypoint_container = feature_extraction.getKeyPointContainer();
+        const cv::Mat keypoint_descriptor = feature_extraction.getKeyPointDescriptor();
         ASSERT_EQ(116, keypoint_container.size())
             << "detected keypoints for test image is " << keypoint_container.size();
         cv::Size expected_size{32,116};
         ASSERT_EQ(expected_size, keypoint_descriptor.size())
             << "keypoints descriptor for test image is " << keypoint_descriptor.size();
+        std::cout <<"Descriptor: \n"<< keypoint_descriptor <<"\n";
     }
 } // namespace Pipeline_keypoints_processor
 
