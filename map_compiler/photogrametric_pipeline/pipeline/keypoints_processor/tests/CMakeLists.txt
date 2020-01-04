@@ -9,7 +9,7 @@ set(RESOURCE_FILES resources/image_a.png resources/chess_board_test.png)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${RESOURCE_FILES}
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources)
 
-set(IMAGES_FOR_MULTITHREAD_APPROACH image_1.jpg image_2.jpg image_3.jpg image_4.jpg image_5.jpg)
+set(IMAGES_FOR_MULTITHREAD_APPROACH image_1.JPG image_2.JPG image_3.JPG image_4.JPG image_5.JPG)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/multiples_images/${IMAGES_FOR_MULTITHREAD_APPROACH}
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources/multiples_images/)
 
