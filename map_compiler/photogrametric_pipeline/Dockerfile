@@ -19,7 +19,8 @@ RUN apt-get install openexr -y
 RUN apt-get install gcc-9 g++-9 -y
 RUN apt-get install qt5-default libgtk2.0-dev libtbb-dev -y
 RUN apt-get install libprotobuf-dev protobuf-compiler -y
-RUN apt-get install libgoogle-glog-dev libgflags-dev -y
+#RUN apt-get install libgoogle-glog-dev libgflags-dev -y
+
 RUN apt-get install libgphoto2-dev libeigen3-dev libhdf5-dev doxygen -y
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 5
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 9
@@ -32,7 +33,7 @@ RUN apt-get install libflann-dev libboost-all-dev libsuitesparse-dev -y
 RUN apt-get install libdc1394-22-dev libxine2-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev -y
 RUN apt-get install libfaac-dev libmp3lame-dev libtheora-dev libvorbis-dev libxvidcore-dev -y
 RUN apt-get install libopencore-amrnb-dev libopencore-amrwb-dev x264 v4l-utils -y
-RUN apt-get install python-dev python-pip python3-dev python3-pip -y
+RUN apt-get install python-dev python-pip python3-dev python3-pip autoconf -y
 RUN pip3 install -U pip numpy
 RUN mkdir Documents
 WORKDIR Documents
@@ -75,8 +76,11 @@ RUN cd opencv && mkdir build&& cd build && cmake -D CMAKE_BUILD_TYPE=RELEASE \
     -D OPENCV_ENABLE_NONFREE=ON \
     -D BUILD_EXAMPLES=ON .. && make -j 4 && make install && ldconfig
 RUN sh -c 'echo "/usr/local/lib" >> /etc/ld.so.conf.d/opencv.conf'
-
-
+#Specific dependency for Photogrametric pipeline
+#install GLOG
+WORKDIR /home/Documents
+RUN git clone https://github.com/google/glog.git
+RUN cd glog && mkdir -p build && cmake .. -Bbuild -G "Unix Makefiles" && cmake --build build && cmake --build build --target install && ldconfig
 
 #install VTK
 
@@ -85,7 +89,7 @@ RUN sh -c 'echo "/usr/local/lib" >> /etc/ld.so.conf.d/opencv.conf'
 #
 
 #RUN wget http://www.vtk.org/files/release/7.1/VTK-7.1.0.tar.gz
-#RUN apt-get install vim freeglut3-dev libgtest-dev -y
+#RUN apt-get install freeglut3-dev libgtest-dev -y
 #RUN tar -xf VTK-7.1.0.tar.gz
 #RUN cd VTK-7.1.0 && mkdir build && cd build && cmake .. && make && make install
 #install PCL
