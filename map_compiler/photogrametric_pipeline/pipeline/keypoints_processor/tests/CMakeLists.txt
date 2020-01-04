@@ -9,9 +9,16 @@ set(RESOURCE_FILES resources/image_a.png resources/chess_board_test.png)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${RESOURCE_FILES}
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources)
 
-set(IMAGES_FOR_MULTITHREAD_APPROACH image_1.JPG image_2.JPG image_3.JPG image_4.JPG image_5.JPG)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/multiples_images/${IMAGES_FOR_MULTITHREAD_APPROACH}
-     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources/multiples_images/)
+set(IMAGES_FOR_MULTITHREAD_APPROACH
+    /resources/multiples_images/image_1.JPG
+    /resources/multiples_images/image_2.JPG
+    /resources/multiples_images/image_3.JPG
+    /resources/multiples_images/image_4.JPG
+    /resources/multiples_images/image_5.JPG
+    )
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}${IMAGES_FOR_MULTITHREAD_APPROACH}
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources/multiples_images)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 

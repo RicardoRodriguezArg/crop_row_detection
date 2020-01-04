@@ -14,7 +14,7 @@ RUN apt-get install git unzip pkg-config -y
 RUN apt-get install libjpeg8-dev libpng12-dev libtiff-dev libjasper-dev libjasper1 libavcodec-dev libavformat-dev libswscale-dev -y
 RUN apt-get install libv4l-dev libxvidcore-dev libx264-dev libgtk-3-dev -y
 RUN apt-get install libatlas-base-dev gfortran -y
-RUN apt-get install libtbb2 libtbb-dev -y
+RUN apt-get install libtbb2 libtbb-dev vim -y
 RUN apt-get install openexr -y
 RUN apt-get install gcc-9 g++-9 -y
 RUN apt-get install qt5-default libgtk2.0-dev libtbb-dev -y
