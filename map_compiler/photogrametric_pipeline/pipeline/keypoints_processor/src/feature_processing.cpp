@@ -48,7 +48,7 @@ void NSFeatureExtraction::FeatureProcessing::extractFilenamesToProcess() {
 
         const auto path = entry.path();
         const std::string filename(path.filename().c_str());
-        files_to_process.emplace_back();
+        files_to_process.emplace_back(filename);
     }
 }
 
@@ -60,4 +60,7 @@ void NSFeatureExtraction::FeatureProcessing::setConfig(
 NSFeatureExtraction::FeatureProcessing::FeatureExtractionContainer &
 NSFeatureExtraction::FeatureProcessing::getFeatureExtractionContainer() {
     return feature_container_;
+}
+std::size_t NSFeatureExtraction::FeatureProcessing::getImagesProcessingCount() {
+    return files_to_process.size();
 }

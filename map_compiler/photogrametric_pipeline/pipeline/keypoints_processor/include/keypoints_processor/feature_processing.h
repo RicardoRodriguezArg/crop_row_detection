@@ -13,7 +13,7 @@ namespace NSFeatureExtraction {
         ~FeatureProcessing();
         void setConfig(const NSConfig::FeatureExtracionConfig &config) noexcept;
         std::vector<FeatureExtractionTask> &getFeatureExtractionContainer();
-
+        std::size_t getImagesProcessingCount();
         void execute() override;
         std::optional<int> computeImageCountToProcess();
 
