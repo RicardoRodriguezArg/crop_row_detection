@@ -24,6 +24,9 @@ set_property(TARGET OpenCV PROPERTY
 find_package(gflags REQUIRED)
 #add_library(gflags INTERFACE IMPORTED)
 
+find_package(glog REQUIRED)
+add_library(glog INTERFACE IMPORTED)
+
 enable_testing()
 add_subdirectory(keypoints_processor)
 add_subdirectory(utils)

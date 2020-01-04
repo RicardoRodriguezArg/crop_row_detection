@@ -88,29 +88,13 @@ TEST(KEYPOINT_EXTRACTION_MULTITHREAD_APPROACH,
   const float match_percent_aceptable{0.15f};
   const std::string &descriptor_name{"FlannBased"};
   // parameters definitions
+  // parameters for Multithread processing
+  const std::string path_to_directory{"./resources"};
+  const inst max_thread_count{4};
 
-  NSFeatureExtraction::FeatureExtraction feature_extraction{
-      max_features, match_percent_aceptable, descriptor_name};
+  const NSFeatureExtraction::FeatureProcessing feature_processing{
+      path_to_directory, max_thread_count};
   // load image mat from file
-  const std::string image_filename{"resources/chess_board_test.png"};
-  // TODO:encapsulate and test
-  auto image_raw_color =
-      NSFeatureExtraction::Utils::loadImageFromFileName(image_filename);
-  EXPECT_EQ(false, image_raw_color.empty());
-  feature_extraction.setRawImage(image_raw_color);
-  EXPECT_NO_THROW(feature_extraction.detectFeatures());
-  // add
-  const std::vector<cv::KeyPoint> keypoint_container =
-      feature_extraction.getKeyPointContainer();
-  const cv::Mat keypoint_descriptor =
-      feature_extraction.getKeyPointDescriptor();
-  ASSERT_EQ(116, keypoint_container.size())
-      << "detected keypoints for test image is " << keypoint_container.size();
-  cv::Size expected_size{32, 116};
-  ASSERT_EQ(expected_size, keypoint_descriptor.size())
-      << "keypoints descriptor for test image is "
-      << keypoint_descriptor.size();
-  std::cout << "Descriptor: \n" << keypoint_descriptor << "\n";
 }
 
 }  // namespace Pipeline_keypoints_processor

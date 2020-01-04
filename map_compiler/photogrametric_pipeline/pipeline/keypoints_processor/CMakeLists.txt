@@ -11,7 +11,7 @@ add_library(PIPELINE::KEYPOINT_PROC_LIB ALIAS ${PROJECT_NAME})
 # Link
 target_link_libraries(
   ${PROJECT_NAME} PRIVATE PIPELINE_UTILS::Pipeline_utils PIPELINE::INTERFACES
-                          ${OpenCV_LIBS})
+                          ${OpenCV_LIBS} glog::glog)
 
 target_include_directories(
   ${PROJECT_NAME}
