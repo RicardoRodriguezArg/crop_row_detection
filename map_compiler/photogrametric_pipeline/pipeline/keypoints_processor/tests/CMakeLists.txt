@@ -9,6 +9,9 @@ set(RESOURCE_FILES resources/image_a.png resources/chess_board_test.png)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${RESOURCE_FILES}
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources)
 
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/multiples_images/*.jpg
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources/multiples_images/)
+
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 target_link_libraries(
