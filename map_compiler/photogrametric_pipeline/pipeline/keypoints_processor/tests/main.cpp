@@ -85,8 +85,9 @@ namespace Pipeline_keypoints_processor {
 
         const int max_thread_count{4};
 
-        const NSFeatureExtraction::FeatureProcessing feature_processing{"./resources",
-                                                                        max_thread_count};
+        NSFeatureExtraction::FeatureProcessing feature_processing{"./resources", max_thread_count};
+        feature_processing.execute();
+
         // load image mat from file
     }
 

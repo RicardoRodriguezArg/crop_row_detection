@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <glog/logging.h>
 #include <string>
+
 NSFeatureExtraction::FeatureProcessing::FeatureProcessing(std::string &&directory_path,
                                                           const int number_of_threads)
     : number_of_threads_(number_of_threads), directory_path_(std::move(directory_path))
@@ -14,23 +15,24 @@ void NSFeatureExtraction::FeatureProcessing::execute() {
     if (is_config_using_default_values) {
         LOG(INFO) << "Using Default Values, config was not setup";
     }
-    namespace fs = std::filesystem;
+    extractFilenamesToProcess();
     int current_thread_index{0};
     std::vector<std::future<bool>> future_repo;
-    future_repo.reserve(number_of_threads_);
-    for (auto &entry : fs::directory_iterator(directory_path_)) {
+    future_repo.reserve(files_to_process.size());
+    for (auto &filename : files_to_process) {
         if (current_thread_index <= number_of_threads_) {
             ++current_thread_index;
             feature_container_.emplace_back(FeatureExtractionTask{config_});
-            const auto path = entry.path();
-            const std::string filename(path.filename().c_str());
+            LOG(INFO) << "File to Process: " << filename;
             auto future = feature_container_.front().run(filename);
             future_repo.emplace_back(std::move(future));
+            LOG(INFO) << "Async enqueue!";
         } else {
             current_thread_index = 0;
             // wait for the result of the asyncs operations
             for (auto &future : future_repo) {
                 future.get();
+                LOG(INFO) << "Async done job!";
             }
         }
     }
@@ -39,7 +41,23 @@ void NSFeatureExtraction::FeatureProcessing::execute() {
     // keypoints and landmarks 3.- Find fundamental/Perspective matrix
 }
 
+void NSFeatureExtraction::FeatureProcessing::extractFilenamesToProcess() {
+    LOG(INFO) << "Extraction filenames to process ";
+    namespace fs = std::filesystem;
+    for (auto &entry : fs::directory_iterator(directory_path_)) {
+
+        const auto path = entry.path();
+        const std::string filename(path.filename().c_str());
+        files_to_process.emplace_back();
+    }
+}
+
 void NSFeatureExtraction::FeatureProcessing::setConfig(
     const NSConfig::FeatureExtracionConfig &config) noexcept {
     config_ = config;
+}
+
+NSFeatureExtraction::FeatureProcessing::FeatureExtractionContainer &
+NSFeatureExtraction::FeatureProcessing::getFeatureExtractionContainer() {
+    return feature_container_;
 }
