@@ -4,21 +4,17 @@ find_package(OpenCV REQUIRED)
 set(HDRS keypoint_processing_utils.h)
 add_executable(${PROJECT_NAME} main.cpp ${HDRS})
 
-set(RESOURCE_FILES resources/image_a.png resources/chess_board_test.png)
+set(RESOURCE_FILES
+    resources/image_a.png
+    resources/chess_board_test.png
+    resources/mt_image_1.JPG
+    resources/mt_image_2.JPG
+    resources/mt_image_3.JPG
+    resources/mt_image_4.JPG
+    resources/mt_image_5.JPG)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/${RESOURCE_FILES}
      DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources)
-
-set(IMAGES_FOR_MULTITHREAD_APPROACH
-    /resources/multiples_images/image_1.JPG
-    /resources/multiples_images/image_2.JPG
-    /resources/multiples_images/image_3.JPG
-    /resources/multiples_images/image_4.JPG
-    /resources/multiples_images/image_5.JPG
-    )
-
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}${IMAGES_FOR_MULTITHREAD_APPROACH}
-     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources/multiples_images)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
