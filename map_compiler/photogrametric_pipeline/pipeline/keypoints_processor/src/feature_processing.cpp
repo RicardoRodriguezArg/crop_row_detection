@@ -1,8 +1,8 @@
 #include "keypoints_processor/feature_processing.h"
+#include <algorithm>
 #include <filesystem>
 #include <glog/logging.h>
 #include <string>
-
 NSFeatureExtraction::FeatureProcessing::FeatureProcessing(std::string &&directory_path,
                                                           const int number_of_threads)
     : number_of_threads_(number_of_threads), directory_path_(std::move(directory_path))
@@ -19,21 +19,17 @@ void NSFeatureExtraction::FeatureProcessing::execute() {
     int current_thread_index{0};
     std::vector<std::future<bool>> future_repo;
     future_repo.reserve(files_to_process.size());
-    for (auto &filename : files_to_process) {
-        if (current_thread_index <= number_of_threads_) {
-            ++current_thread_index;
-            feature_container_.emplace_back(FeatureExtractionTask{config_});
-            LOG(INFO) << "File to Process: " << filename;
-            auto future = feature_container_.front().run(filename);
+    for (const auto &feature_process : feature_container_) {
+        auto future = feature_container_.front().run();
+        if (current_thread_index < number_of_threads_) {
             future_repo.emplace_back(std::move(future));
-            LOG(INFO) << "Async enqueue!";
         } else {
-            current_thread_index = 0;
-            // wait for the result of the asyncs operations
             for (auto &future : future_repo) {
                 future.get();
-                LOG(INFO) << "Async done job!";
+                LOG(INFO) << "Async done job!: " << current_thread_index;
             }
+            future_repo.clear();
+            current_thread_index = 0;
         }
     }
     // 1.- Launch all image thread in paralell for keypoint and descripptors
@@ -48,8 +44,11 @@ void NSFeatureExtraction::FeatureProcessing::extractFilenamesToProcess() {
 
         const auto path = entry.path();
         const std::string filename(path.filename().c_str());
+        LOG(INFO) << "Image to Process: " << filename;
+        feature_container_.emplace_back(FeatureExtractionTask{config_, filename});
         files_to_process.emplace_back(filename);
     }
+    std::sort(std::begin(files_to_process), std::end(files_to_process));
 }
 
 void NSFeatureExtraction::FeatureProcessing::setConfig(

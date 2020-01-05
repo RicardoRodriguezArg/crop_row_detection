@@ -11,16 +11,16 @@ namespace NSFeatureExtraction {
 
     struct FeatureExtractionTask {
         template <typename Config>
-        FeatureExtractionTask(Config config)
+        FeatureExtractionTask(Config config, const std::string &filename_to_process)
             : feature_extraction_ptr(std::make_unique<FeatureExtraction>(
-                  config.max_features_, config.match_percent_aceptable_, config.descriptor_name_)) {
-        }
+                  config.max_features_, config.match_percent_aceptable_, config.descriptor_name_)),
+              filename_to_process_(filename_to_process) {}
 
-        std::future<bool> run(std::string path_to_image) {
+        std::future<bool> run() {
             std::future<bool> result = std::async(
                 std::launch::async,
-                [ptr = std::move(feature_extraction_ptr)](std::string file_to_load) {
-                    cv::Mat image_raw = cv::imread(file_to_load, cv::IMREAD_GRAYSCALE);
+                [ptr = std::move(feature_extraction_ptr)](std::string filename_to_process_) {
+                    cv::Mat image_raw = cv::imread(filename_to_process_, cv::IMREAD_GRAYSCALE);
                     bool result{false};
                     if (image_raw.data) {
                         ptr->setRawImage(image_raw);
@@ -29,7 +29,7 @@ namespace NSFeatureExtraction {
                     }
                     return result;
                 },
-                path_to_image);
+                filename_to_process_);
             return result;
         }
 
@@ -39,6 +39,7 @@ namespace NSFeatureExtraction {
 
         private:
         std::unique_ptr<FeatureExtraction> feature_extraction_ptr;
+        const std::string filename_to_process_;
     };
 } // namespace NSFeatureExtraction
 #endif

@@ -87,7 +87,8 @@ namespace Pipeline_keypoints_processor {
 
         NSFeatureExtraction::FeatureProcessing feature_processing{"./resources", max_thread_count};
         feature_processing.execute();
-
+        ASSERT_EQ(feature_processing.getImagesProcessingCount(),
+                  feature_processing.getFeatureExtractionContainer().size());
         // load image mat from file
     }
 
@@ -96,7 +97,7 @@ namespace Pipeline_keypoints_processor {
 int main(int argc, char **argv) {
     // Initialize Google's logging library.
     google::InitGoogleLogging(argv[0]);
-
+    FLAGS_logtostderr = true;
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
