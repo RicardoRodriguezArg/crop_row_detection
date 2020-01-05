@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <glog/logging.h>
-#include <string>
+
 NSFeatureExtraction::FeatureProcessing::FeatureProcessing(std::string &&directory_path,
                                                           const int number_of_threads)
     : number_of_threads_(number_of_threads), directory_path_(std::move(directory_path))
@@ -19,14 +19,16 @@ void NSFeatureExtraction::FeatureProcessing::execute() {
     int current_thread_index{0};
     std::vector<std::future<bool>> future_repo;
     future_repo.reserve(files_to_process.size());
-    for (const auto &feature_process : feature_container_) {
-        auto future = feature_container_.front().run();
+    for (auto &feature_process : feature_container_) {
+        auto future = feature_process.run();
         if (current_thread_index < number_of_threads_) {
             future_repo.emplace_back(std::move(future));
+            ++current_thread_index;
         } else {
             for (auto &future : future_repo) {
-                future.get();
+                const bool result = future.get();
                 LOG(INFO) << "Async done job!: " << current_thread_index;
+                LOG(INFO) << "Result of the Thread: " << result;
             }
             future_repo.clear();
             current_thread_index = 0;
@@ -38,15 +40,12 @@ void NSFeatureExtraction::FeatureProcessing::execute() {
 }
 
 void NSFeatureExtraction::FeatureProcessing::extractFilenamesToProcess() {
-    LOG(INFO) << "Extraction filenames to process ";
     namespace fs = std::filesystem;
     for (auto &entry : fs::directory_iterator(directory_path_)) {
-
-        const auto path = entry.path();
-        const std::string filename(path.filename().c_str());
-        LOG(INFO) << "Image to Process: " << filename;
-        feature_container_.emplace_back(FeatureExtractionTask{config_, filename});
-        files_to_process.emplace_back(filename);
+        if (entry.is_regular_file()) {
+            feature_container_.emplace_back(FeatureExtractionTask{config_, entry.path()});
+            files_to_process.emplace_back(entry.path());
+        }
     }
     std::sort(std::begin(files_to_process), std::end(files_to_process));
 }

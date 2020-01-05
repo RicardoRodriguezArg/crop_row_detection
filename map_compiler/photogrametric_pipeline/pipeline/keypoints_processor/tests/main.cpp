@@ -76,15 +76,19 @@ namespace Pipeline_keypoints_processor {
     }
 
     TEST(KEYPOINT_EXTRACTION_MULTITHREAD_APPROACH, EXTRACT_FEATURE_MULTIPLE_IMAGES_OK) {
-        // tunning with this parameters
-        constexpr int max_features{500};
-        const float match_percent_aceptable{0.15f};
-        const std::string &descriptor_name{"FlannBased"};
-        // parameters definitions
         // parameters for Multithread processing
-
         const int max_thread_count{4};
+        NSFeatureExtraction::FeatureProcessing feature_processing{"./resources", max_thread_count};
+        feature_processing.execute();
+        ASSERT_EQ(feature_processing.getImagesProcessingCount(),
+                  feature_processing.getFeatureExtractionContainer().size());
+        // load image mat from file
+    }
 
+    TEST(KEYPOINT_EXTRACTION_MULTITHREAD_APPROACH,
+         EXTRACT_FEATURE_MULTIPLE_IMAGES_PARAMETER_CHECK_TUNNING_OK) {
+        // parameters for Multithread processing
+        const int max_thread_count{10};
         NSFeatureExtraction::FeatureProcessing feature_processing{"./resources", max_thread_count};
         feature_processing.execute();
         ASSERT_EQ(feature_processing.getImagesProcessingCount(),

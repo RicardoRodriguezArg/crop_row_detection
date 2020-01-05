@@ -3,13 +3,11 @@
 
 #include "feature_extraction.h"
 #include <future>
-#include <memory>
-#include <opencv2/opencv.hpp>
-#include <string>
-
+#include <utils/cv_utils.h>
 namespace NSFeatureExtraction {
 
     struct FeatureExtractionTask {
+
         template <typename Config>
         FeatureExtractionTask(Config config, const std::string &filename_to_process)
             : feature_extraction_ptr(std::make_unique<FeatureExtraction>(
@@ -17,16 +15,20 @@ namespace NSFeatureExtraction {
               filename_to_process_(filename_to_process) {}
 
         std::future<bool> run() {
+
             std::future<bool> result = std::async(
                 std::launch::async,
                 [ptr = std::move(feature_extraction_ptr)](std::string filename_to_process_) {
-                    cv::Mat image_raw = cv::imread(filename_to_process_, cv::IMREAD_GRAYSCALE);
+                    const auto image =
+                        NSFeatureExtraction::Utils::loadImageFromFileName(filename_to_process_);
                     bool result{false};
-                    if (image_raw.data) {
-                        ptr->setRawImage(image_raw);
+                    if (!image.empty()) {
+                        ptr->setRawImage(image);
                         ptr->detectFeatures();
+                        LOG(INFO) << "-->> SUCCESS PROCESSING IMAGE: " << filename_to_process_;
                         result = true;
                     }
+                    LOG(INFO) << "Result of the operation: " << result;
                     return result;
                 },
                 filename_to_process_);
@@ -35,6 +37,10 @@ namespace NSFeatureExtraction {
 
         std::unique_ptr<FeatureExtraction> getFeatureExtractionPtr() {
             return std::move(feature_extraction_ptr);
+        }
+
+        FEATURE_CONSTANTS::KEYPROCESS_INFO getTaskCurrentStatecurrent() const {
+            return feature_extraction_ptr->currentState();
         }
 
         private:

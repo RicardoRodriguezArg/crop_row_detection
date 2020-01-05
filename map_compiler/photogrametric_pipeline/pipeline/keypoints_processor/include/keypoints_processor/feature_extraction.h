@@ -1,8 +1,10 @@
 #ifndef __PIPELINE_FEATURE_EXTRACTION_H__
 #define __PIPELINE_FEATURE_EXTRACTION_H__
+#include "feature_definitions.h"
 #include "opencv2/features2d.hpp"
 #include "opencv2/xfeatures2d.hpp"
 #include <cstdint>
+#include <glog/logging.h>
 #include <memory>
 #include <opencv2/opencv.hpp>
 #include <optional>
@@ -33,6 +35,7 @@ namespace NSFeatureExtraction {
                                    const std::vector<cv::KeyPoint> &keyPoints) const {
             // TODO: not implemented
         }
+        FEATURE_CONSTANTS::KEYPROCESS_INFO currentState() const;
 
         cv::Mat createPerpestiveMatrix(const std::vector<cv::DMatch> &matches,
                                        const std::vector<cv::KeyPoint> &keyPoints) const;
@@ -57,6 +60,7 @@ namespace NSFeatureExtraction {
         cv::Mat image_ = {};
         KeyPointId keypoint_id_ = {};
         // std::unordered_set<KeyPointId> matched_external_keypoints_;
+        FEATURE_CONSTANTS::KEYPROCESS_INFO current_state_;
     };
 } // namespace NSFeatureExtraction
 #endif

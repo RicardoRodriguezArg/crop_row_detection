@@ -9,8 +9,8 @@ NSFeatureExtraction::FeatureExtraction::FeatureExtraction(
     const int max_features = 500, const float match_percent_aceptable = 0.15f,
     const std::string &descriptor_name = "FlannBased")
     : max_features_(max_features), orb_detector_(cv::ORB::create(max_features)),
-
-      match_percent_aceptable_(match_percent_aceptable) {
+      match_percent_aceptable_(match_percent_aceptable),
+      current_state_(FEATURE_CONSTANTS::KEYPROCESS_INFO::NOT_PROCESSED) {
     // TODO: Check at compile time string is not empty
     if (!descriptor_name.empty()) {
         matcher_ = cv::DescriptorMatcher::create(descriptor_name);
@@ -23,9 +23,11 @@ void NSFeatureExtraction::FeatureExtraction::checkPreliminars() {
 }
 
 void NSFeatureExtraction::FeatureExtraction::detectFeatures() {
+    current_state_ = FEATURE_CONSTANTS::KEYPROCESS_INFO::ERROR;
     checkPreliminars();
     const auto &&image_in_grey_scale = NSFeatureExtraction::Utils::convertToGreyScale(image_);
     orb_detector_->detectAndCompute(image_in_grey_scale, cv::Mat(), keyPoints_, descriptor_);
+    current_state_ = FEATURE_CONSTANTS::KEYPROCESS_INFO::OK;
 }
 
 const std::vector<cv::KeyPoint>
@@ -103,4 +105,8 @@ void NSFeatureExtraction::FeatureExtraction::setKeyPointId(
 void NSFeatureExtraction::FeatureExtraction::addExternalReference(
     const KeyPointId external_keypoint_id) {
     // matched_external_keypoints_.insert(external_keypoint_id);
+}
+
+FEATURE_CONSTANTS::KEYPROCESS_INFO NSFeatureExtraction::FeatureExtraction::currentState() const {
+    return current_state_;
 }
