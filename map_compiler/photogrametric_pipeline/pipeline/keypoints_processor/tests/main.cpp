@@ -1,8 +1,8 @@
 #include "keypoints_processor/feature_exceptions.h"
-#include "keypoints_processor/feature_extraction.h"
 #include "keypoints_processor/feature_extraction_config.h"
 #include "keypoints_processor/feature_extraction_task.h"
-#include "keypoints_processor/feature_processing.h"
+#include "keypoints_processor/feature_keypoints.h"
+#include "keypoints_processor/feature_processing_task_based.h"
 #include "utils/cv_utils.h"
 //#include "keypoints_processor/keypoints_repository.h"
 #include <glog/logging.h>
@@ -78,8 +78,9 @@ namespace Pipeline_keypoints_processor {
     TEST(KEYPOINT_EXTRACTION_MULTITHREAD_APPROACH, EXTRACT_FEATURE_MULTIPLE_IMAGES_OK) {
         // parameters for Multithread processing
         const int max_thread_count{4};
-        NSFeatureExtraction::FeatureProcessing feature_processing{"./resources", max_thread_count};
-        feature_processing.execute();
+        NSFeatureExtraction::MultiThreadFeatureProcessing feature_processing{"./resources",
+                                                                             max_thread_count};
+        feature_processing.extractKeypointFeature();
         ASSERT_EQ(feature_processing.getImagesProcessingCount(),
                   feature_processing.getFeatureExtractionContainer().size());
         // load image mat from file
@@ -89,8 +90,9 @@ namespace Pipeline_keypoints_processor {
          EXTRACT_FEATURE_MULTIPLE_IMAGES_PARAMETER_CHECK_TUNNING_OK) {
         // parameters for Multithread processing
         const int max_thread_count{10};
-        NSFeatureExtraction::FeatureProcessing feature_processing{"./resources", max_thread_count};
-        feature_processing.execute();
+        NSFeatureExtraction::MultiThreadFeatureProcessing feature_processing{"./resources",
+                                                                             max_thread_count};
+        feature_processing.extractKeypointFeature();
         ASSERT_EQ(feature_processing.getImagesProcessingCount(),
                   feature_processing.getFeatureExtractionContainer().size());
         // load image mat from file

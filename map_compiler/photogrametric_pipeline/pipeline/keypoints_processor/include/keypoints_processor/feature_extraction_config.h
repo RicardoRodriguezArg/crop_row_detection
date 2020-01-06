@@ -15,7 +15,7 @@ namespace NSConfig {
         FeatureExtracionConfig operator=(const FeatureExtracionConfig &other) {
             return {other.max_features_, other.match_percent_aceptable_, other.descriptor_name_};
         }
-
+        ~FeatureExtracionConfig() = default;
         const int max_features_;
         const float match_percent_aceptable_;
         const std::string descriptor_name_;

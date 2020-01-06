@@ -6,26 +6,27 @@
 #include "feature_extraction_task.h"
 #include "interfaces/pipeline_process_interface.h"
 namespace NSFeatureExtraction {
-    class FeatureProcessing : public IPipelineProcess {
+    class MultiThreadFeatureProcessing : public IPipelineProcess {
 
         public:
-        using FeatureExtractionContainer = std::vector<FeatureExtractionTask>;
+        using KeyPointsFeaturesContainer = std::vector<FeatureExtractionTask>;
         using FeatureExtractionInfo = std::vector<std::string>;
-        FeatureProcessing(std::string &&directory_path, const int number_of_threads);
-        ~FeatureProcessing();
+        MultiThreadFeatureProcessing(std::string &&directory_path, const int number_of_threads);
+
         void setConfig(const NSConfig::FeatureExtracionConfig &config) noexcept;
-        std::vector<FeatureExtractionTask> &getFeatureExtractionContainer();
+        KeyPointsFeaturesContainer &getFeatureExtractionContainer();
         std::size_t getImagesProcessingCount();
-        void execute() override;
-        std::optional<int> computeImageCountToProcess();
+        void extractKeypointFeature() override;
+        void FoundMatchedKeyPoints() override;
 
         private:
+        bool isValidKeyPoint(const FeatureExtractionTask &feature_task) const;
         void extractFilenamesToProcess();
         const int number_of_threads_;
         const std::string directory_path_;
         bool is_config_using_default_values = true;
         NSConfig::FeatureExtracionConfig config_;
-        FeatureExtractionContainer feature_container_ = {};
+        KeyPointsFeaturesContainer feature_container_ = {};
         FeatureExtractionInfo files_to_process = {};
     };
 } // namespace NSFeatureExtraction

@@ -3,7 +3,8 @@
 namespace NSFeatureExtraction {
     struct IPipelineProcess {
         virtual ~IPipelineProcess() = default;
-        virtual void execute() = 0;
+        virtual void extractKeypointFeature() = 0;
+        virtual void FoundMatchedKeyPoints() = 0;
     };
 } // namespace NSFeatureExtraction
 #endif

@@ -19,22 +19,21 @@ namespace NSFeatureExtraction {
         using KeyPoint = std::uint32_t;
         using ImageId = std::size_t;
         using KeyPointId = std::tuple<KeyPoint, ImageId>;
+        constexpr static int KNN_BEST_MATCHED_VALUE{4};
+        constexpr static float MATCH_RATIO_THRESHOLD{0.7f};
         explicit FeatureExtraction(const int max_features, const float match_percent_aceptable,
                                    const std::string &descriptor_name);
 
         void detectFeatures();
-
+        // TODO: Remove this and apply Resource adquisition is Initialization idiom
         void setRawImage(const cv::Mat &raw_image);
 
-        std::vector<cv::DMatch> match(cv::Mat other_descriptor);
+        std::vector<std::optional<cv::DMatch>> match(const cv::Mat other_descriptor);
 
-        cv::Mat createFundamentalMatrix(const std::vector<cv::DMatch> &,
-                                        const std::vector<cv::KeyPoint> &keyPoints) const;
+        cv::Mat
+        FindFundamentalMatrix(const std::vector<std::optional<cv::DMatch>> &matched_keypoints,
+                              const std::vector<cv::KeyPoint> &other_descriptor) const;
 
-        void createEssentialMatrix(const std::vector<cv::DMatch> &matches,
-                                   const std::vector<cv::KeyPoint> &keyPoints) const {
-            // TODO: not implemented
-        }
         FEATURE_CONSTANTS::KEYPROCESS_INFO currentState() const;
 
         cv::Mat createPerpestiveMatrix(const std::vector<cv::DMatch> &matches,
@@ -44,7 +43,8 @@ namespace NSFeatureExtraction {
         void setKeyPointId(const std::string &image_filename, const KeyPoint &local_keypoint);
         void addExternalReference(const KeyPointId external_keypoint_id);
         const std::vector<cv::KeyPoint> getKeyPointContainer() const;
-        const cv::Mat getKeyPointDescriptor() const;
+        cv::Mat getKeyPointDescriptor() const;
+        cv::Mat getKeyPointDescriptor();
 
         private:
         void checkPreliminars();
