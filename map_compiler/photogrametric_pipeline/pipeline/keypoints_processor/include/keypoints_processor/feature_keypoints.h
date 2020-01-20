@@ -16,9 +16,9 @@ namespace NSFeatureExtraction {
     class FeatureExtraction {
         public:
         using FeatureExtractionPtr = std::unique_ptr<FeatureExtraction>;
-        using KeyPoint = std::uint32_t;
+        using KeyPointId = std::uint32_t;
         using ImageId = std::size_t;
-        using KeyPointId = std::tuple<KeyPoint, ImageId>;
+        using KeyPointId = std::tuple<ImageId, KeyPointId>;
         constexpr static int KNN_BEST_MATCHED_VALUE{4};
         constexpr static float MATCH_RATIO_THRESHOLD{0.7f};
         explicit FeatureExtraction(const int max_features, const float match_percent_aceptable,
@@ -29,8 +29,9 @@ namespace NSFeatureExtraction {
         void setRawImage(const cv::Mat &raw_image);
 
         std::vector<std::optional<cv::DMatch>> match(const cv::Mat other_descriptor);
+        std::vector<cv::Mat> FilterMatches(const std::vector<cv::DMatch> &matched_keypoints,
+                                           const std::vector<cv::KeyPoint> &other_keypoint) const;
 
-        cv::Mat
         FindFundamentalMatrix(const std::vector<std::optional<cv::DMatch>> &matched_keypoints,
                               const std::vector<cv::KeyPoint> &other_descriptor) const;
 
@@ -39,9 +40,8 @@ namespace NSFeatureExtraction {
         cv::Mat createPerpestiveMatrix(const std::vector<cv::DMatch> &matches,
                                        const std::vector<cv::KeyPoint> &keyPoints) const;
 
-        KeyPointId getKeyPointID() const;
-        void setKeyPointId(const std::string &image_filename, const KeyPoint &local_keypoint);
-        void addExternalReference(const KeyPointId external_keypoint_id);
+        KeyPointId getID() const;
+
         const std::vector<cv::KeyPoint> getKeyPointContainer() const;
         cv::Mat getKeyPointDescriptor() const;
         cv::Mat getKeyPointDescriptor();
@@ -50,6 +50,9 @@ namespace NSFeatureExtraction {
         void checkPreliminars();
         void checkImageIsNotEmpty();
         void checkMatcherIsSet();
+        KeyPointId GenerateKeyPointId(const std::uint32_t &id) const;
+
+        std::uint32_t GenerateId() const;
         const int max_features_;
         const float match_percent_aceptable_;
         std::vector<cv::KeyPoint> keyPoints_;
@@ -59,7 +62,7 @@ namespace NSFeatureExtraction {
         cv::Ptr<cv::DescriptorMatcher> matcher_;
         cv::Mat image_ = {};
         KeyPointId keypoint_id_ = {};
-        // std::unordered_set<KeyPointId> matched_external_keypoints_;
+        // std::unordered_set<KeyPointId> kp_matched_on_other_images;
         FEATURE_CONSTANTS::KEYPROCESS_INFO current_state_;
     };
 } // namespace NSFeatureExtraction

@@ -66,21 +66,33 @@ NSFeatureExtraction::FeatureExtraction::match(const cv::Mat other_descriptor) {
     std::vector<std::vector<cv::DMatch>> knn_matches{};
     std::vector<std::optional<cv::DMatch>> result{};
     matcher_->knnMatch(descriptor_, other_descriptor, knn_matches, KNN_BEST_MATCHED_VALUE);
-
-    auto select_match_by_threshold = [&](const std::vector<cv::DMatch> &raw_matched) {
-        std::optional<cv::DMatch> result{};
-        if (!raw_matched.empty()) {
-            if (raw_matched[0].distance < MATCH_RATIO_THRESHOLD * raw_matched[1].distance) {
-                return std::make_optional<cv::DMatch>(raw_matched[0]);
-            }
-        }
-        return result;
-    };
-    // TODO: Implement emplace_inserter
-    std::transform(std::begin(knn_matches), std::end(knn_matches), std::back_inserter(result),
-                   select_match_by_threshold);
+    const auto filter_matches_index_mask = FilterMatches(knn_matches);
 
     return result;
+}
+
+std::vector<cv::Mat> NSFeatureExtraction::FeatureExtraction::FilterMatches(
+    const std::vector<cv::DMatch> &matched_keypoints,
+    const std::vector<cv::KeyPoint> &other_keypoint) const {
+    std::vector<std::tuple<int, cv::Point2f>> source;
+    std::vector<std::tuple<int, cv::Point2f>> target;
+    std::vector<cv::Mat> mask;
+
+    const auto &select_match_by_threshold = [&source, &target, &other_keypoint](const auto &match) {
+        if (match[0].distance < MATCH_RATIO_THRESHOLD * match[1].distance) {
+            const auto query_index = match[0].queryIdx;
+            const auto train_index = match[0].trainIdx;
+            const auto &current_descriptor_index = keyPoints_[query_index].pt;
+            const auto &other_descriptor_index = other_keypoint[train_index].pt;
+            source.emplace_back(std::make_tuple(query_index, current_descriptor_index));
+            target.emplace_back(std::make_tuple(train_index, current_descriptor_index));
+        }
+    };
+
+    std::for_each(std::begin(matched_keypoints), std::end(matched_keypoints),
+                  select_match_by_threshold);
+    cv::findFundamentalMat(source, target, cv::FM_RANSAC, 3.0, 0.99, mask);
+    return mask;
 }
 
 cv::Mat NSFeatureExtraction::FeatureExtraction::FindFundamentalMatrix(

@@ -95,7 +95,6 @@ namespace Pipeline_keypoints_processor {
         feature_processing.extractKeypointFeature();
         ASSERT_EQ(feature_processing.getImagesProcessingCount(),
                   feature_processing.getFeatureExtractionContainer().size());
-        // load image mat from file
     }
 
 } // namespace Pipeline_keypoints_processor
