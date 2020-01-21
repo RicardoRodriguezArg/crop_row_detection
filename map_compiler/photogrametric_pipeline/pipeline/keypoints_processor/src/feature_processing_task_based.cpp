@@ -50,8 +50,9 @@ void NSFeatureExtraction::MultiThreadFeatureProcessing::FoundMatchedKeyPoints() 
             auto keypoint_comparator = [&, iterator](const FeatureExtractionTask &next_keypoint) {
                 if (isValidKeyPoint(next_keypoint)) {
                     const auto next_keypoint_descriptor = next_keypoint.getKeyPointDescriptor();
-                    const auto match_keypoints =
-                        current_keypoint.matchKeyPoints(next_keypoint_descriptor);
+                    // TODO: Fix Input for macthed keypoints
+                    /*const auto match_keypoints =
+                        current_keypoint.matchKeyPoints(next_keypoint_descriptor);*/
                 }
             };
 

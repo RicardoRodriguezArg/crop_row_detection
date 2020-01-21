@@ -18,7 +18,7 @@ namespace NSFeatureExtraction {
         using FeatureExtractionPtr = std::unique_ptr<FeatureExtraction>;
         using KeyPointId = std::uint32_t;
         using ImageId = std::size_t;
-        using KeyPointId = std::tuple<ImageId, KeyPointId>;
+        using GlobalKeyPointId = std::tuple<ImageId, KeyPointId>;
         constexpr static int KNN_BEST_MATCHED_VALUE{4};
         constexpr static float MATCH_RATIO_THRESHOLD{0.7f};
         explicit FeatureExtraction(const int max_features, const float match_percent_aceptable,
@@ -28,10 +28,12 @@ namespace NSFeatureExtraction {
         // TODO: Remove this and apply Resource adquisition is Initialization idiom
         void setRawImage(const cv::Mat &raw_image);
 
-        std::vector<std::optional<cv::DMatch>> match(const cv::Mat other_descriptor);
-        std::vector<cv::Mat> FilterMatches(const std::vector<cv::DMatch> &matched_keypoints,
-                                           const std::vector<cv::KeyPoint> &other_keypoint) const;
+        std::vector<std::optional<cv::DMatch>> match(const FeatureExtraction &other_descriptor);
+        std::vector<cv::Mat>
+        FilterMatches(const std::vector<std::vector<cv::DMatch>> &matched_keypoints,
+                      const std::vector<cv::KeyPoint> &other_keypoint) const;
 
+        cv::Mat
         FindFundamentalMatrix(const std::vector<std::optional<cv::DMatch>> &matched_keypoints,
                               const std::vector<cv::KeyPoint> &other_descriptor) const;
 
@@ -40,19 +42,20 @@ namespace NSFeatureExtraction {
         cv::Mat createPerpestiveMatrix(const std::vector<cv::DMatch> &matches,
                                        const std::vector<cv::KeyPoint> &keyPoints) const;
 
-        KeyPointId getID() const;
-
         const std::vector<cv::KeyPoint> getKeyPointContainer() const;
         cv::Mat getKeyPointDescriptor() const;
         cv::Mat getKeyPointDescriptor();
+        void setKeyPointId(const std::uint32_t &image_id) noexcept;
+        cv::Mat getDescriptor() const;
+        std::vector<cv::KeyPoint> getKeyPoints() const;
 
         private:
         void checkPreliminars();
         void checkImageIsNotEmpty();
         void checkMatcherIsSet();
-        KeyPointId GenerateKeyPointId(const std::uint32_t &id) const;
 
-        std::uint32_t GenerateId() const;
+        KeyPointId getId() const;
+
         const int max_features_;
         const float match_percent_aceptable_;
         std::vector<cv::KeyPoint> keyPoints_;

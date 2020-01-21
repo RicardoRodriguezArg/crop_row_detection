@@ -44,8 +44,8 @@ namespace NSFeatureExtraction {
 
         template <typename InputKeyPointDescriptor>
         std::vector<std::optional<cv::DMatch>>
-        matchKeyPoints(const InputKeyPointDescriptor &input_keypoint_descriptor) {
-            return keypoint_processor_ptr->match(input_keypoint_descriptor);
+        matchKeyPoints(const FeatureExtraction &other_feature_extraction) {
+            return keypoint_processor_ptr->match(other_feature_extraction);
         }
 
         cv::Mat getKeyPointDescriptor() const {
