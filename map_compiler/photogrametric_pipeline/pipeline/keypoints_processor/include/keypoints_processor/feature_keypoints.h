@@ -19,6 +19,10 @@ namespace NSFeatureExtraction {
         using KeyPointId = std::uint32_t;
         using ImageId = std::size_t;
         using GlobalKeyPointId = std::tuple<ImageId, KeyPointId>;
+        using ExternalMatchedKeyPoints =
+            std::tuple<KeyPointId, std::vector<std::optional<cv::DMatch>>>;
+        using ExternalKeyPointMap =
+            std::unordered_map<KeyPointId, std::vector<std::optional<cv::DMatch>>>;
         constexpr static int KNN_BEST_MATCHED_VALUE{4};
         constexpr static float MATCH_RATIO_THRESHOLD{0.7f};
         explicit FeatureExtraction(const int max_features, const float match_percent_aceptable,
@@ -29,6 +33,8 @@ namespace NSFeatureExtraction {
         void setRawImage(const cv::Mat &raw_image);
 
         std::vector<std::optional<cv::DMatch>> match(const FeatureExtraction &other_descriptor);
+        std::vector<std::optional<cv::DMatch>> match(const cv::Mat &descriptor,
+                                                     const std::vector<cv::KeyPoint> &keypoints);
         std::vector<cv::Mat>
         FilterMatches(const std::vector<std::vector<cv::DMatch>> &matched_keypoints,
                       const std::vector<cv::KeyPoint> &other_keypoint) const;
@@ -43,11 +49,14 @@ namespace NSFeatureExtraction {
                                        const std::vector<cv::KeyPoint> &keyPoints) const;
 
         const std::vector<cv::KeyPoint> getKeyPointContainer() const;
+        std::vector<cv::KeyPoint> getKeyPoints() const;
         cv::Mat getKeyPointDescriptor() const;
-        cv::Mat getKeyPointDescriptor();
+
         void setKeyPointId(const std::uint32_t &image_id) noexcept;
         cv::Mat getDescriptor() const;
-        std::vector<cv::KeyPoint> getKeyPoints() const;
+
+        void setExternalMatchedKeyPoints(const KeyPointId &id,
+                                         const std::vector<std::optional<cv::DMatch>> &matches);
 
         private:
         void checkPreliminars();
@@ -65,7 +74,7 @@ namespace NSFeatureExtraction {
         cv::Ptr<cv::DescriptorMatcher> matcher_;
         cv::Mat image_ = {};
         KeyPointId keypoint_id_ = {};
-        // std::unordered_set<KeyPointId> kp_matched_on_other_images;
+        ExternalKeyPointMap kp_matched_in_other_images;
         FEATURE_CONSTANTS::KEYPROCESS_INFO current_state_;
     };
 } // namespace NSFeatureExtraction
