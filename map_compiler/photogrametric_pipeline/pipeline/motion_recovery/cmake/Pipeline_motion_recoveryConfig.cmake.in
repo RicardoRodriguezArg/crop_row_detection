@@ -1,0 +1,6 @@
+get_filename_component(Pipeline_motion_recovery_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+if(NOT TARGET Pipeline::motion_recovery)
+    include("${Pipeline_motion_recovery_CMAKE_DIR}/motion_recovery-target.cmake")
+endif()

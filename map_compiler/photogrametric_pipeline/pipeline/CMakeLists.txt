@@ -34,6 +34,8 @@ find_package(glog REQUIRED)
 add_library(glog INTERFACE IMPORTED)
 
 enable_testing()
-add_subdirectory(keypoints_processor)
+
 add_subdirectory(utils)
 add_subdirectory(interfaces)
+add_subdirectory(keypoints_processor)
+add_subdirectory(motion_recovery)
