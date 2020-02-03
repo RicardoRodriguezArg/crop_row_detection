@@ -42,10 +42,9 @@ namespace NSFeatureExtraction {
             return keypoint_processor_ptr->currentState();
         }
 
-        std::vector<std::optional<cv::DMatch>>
-        matchKeyPoints(const cv::Mat &other_descriptor,
-                       const std::vector<cv::KeyPoint> &other_keypoints) {
-            return keypoint_processor_ptr->match(other_descriptor, other_keypoints);
+        void matchKeyPoints(const FeatureExtraction::KeyPointInfoUnit &kp_info_unit) {
+
+            keypoint_processor_ptr->match(kp_info_unit);
         }
 
         cv::Mat getKeyPointDescriptor() const {
@@ -54,7 +53,12 @@ namespace NSFeatureExtraction {
         std::vector<cv::KeyPoint> getKeypoints() const {
             return keypoint_processor_ptr->getKeyPoints();
         }
+
         cv::Mat getKeyPointDescriptor() { return keypoint_processor_ptr->getKeyPointDescriptor(); }
+
+        FeatureExtraction::KeyPointInfoUnit getKeyPointInfoUnit() const {
+            return keypoint_processor_ptr->getKeyPointInfoUnit();
+        }
 
         private:
         std::unique_ptr<FeatureExtraction> keypoint_processor_ptr;

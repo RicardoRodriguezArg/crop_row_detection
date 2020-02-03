@@ -59,84 +59,35 @@ namespace NSFeatureExtraction {
 
     std::vector<cv::KeyPoint> FeatureExtraction::getKeyPoints() const { return keyPoints_; }
 
-    std::vector<std::optional<cv::DMatch>>
-    FeatureExtraction::match(const FeatureExtraction &other_feature_extraction) {
-        return match(other_feature_extraction.getDescriptor(),
-                     other_feature_extraction.getKeyPoints());
-    }
-
-    std::vector<std::optional<cv::DMatch>>
-    FeatureExtraction::match(const cv::Mat &descriptor,
-                             const std::vector<cv::KeyPoint> &keypoints) {
+    void FeatureExtraction::match(const FeatureExtraction::KeyPointInfoUnit &other_kp_data) {
         std::vector<std::vector<cv::DMatch>> knn_matches{};
-        std::vector<std::optional<cv::DMatch>> result{};
-        matcher_->knnMatch(descriptor_, descriptor, knn_matches, KNN_BEST_MATCHED_VALUE);
-        const auto filter_matches_index_mask = FilterMatches(knn_matches, keypoints);
-        return result;
+
+        matcher_->knnMatch(descriptor_, std::get<2>(other_kp_data), knn_matches,
+                           KNN_BEST_MATCHED_VALUE);
+
+        const auto filter_matches_index_mask = FilterMatches(knn_matches);
+        SetExternalKeyPoints(std::get<0>(other_kp_data), filter_matches_index_mask);
     }
 
-    std::vector<cv::Mat>
-    FeatureExtraction::FilterMatches(const std::vector<std::vector<cv::DMatch>> &matched_keypoints,
-                                     const std::vector<cv::KeyPoint> &other_keypoint) const {
-        std::vector<cv::Point2f> source;
-        std::vector<cv::Point2f> target;
-        std::vector<cv::Mat> mask;
+    std::vector<cv::DMatch> FeatureExtraction::FilterMatches(
+        const std::vector<std::vector<cv::DMatch>> &matched_keypoints) const {
 
-        const auto &select_match_by_threshold = [this, &source, &target,
-                                                 &other_keypoint](const auto &match) {
+        std::vector<cv::DMatch> mask;
+        const auto &select_match_by_threshold = [this, &mask](const auto &match) {
             if (match[0].distance < MATCH_RATIO_THRESHOLD * match[1].distance) {
-                const auto query_index = match[0].queryIdx;
-                const auto train_index = match[0].trainIdx;
-                const auto &current_descriptor_index = keyPoints_[query_index].pt;
-                const auto &other_descriptor_index = other_keypoint[train_index].pt;
-                // source.emplace_back(std::make_tuple(query_index, current_descriptor_index));
-                source.emplace_back(current_descriptor_index);
-                // target.emplace_back(std::make_tuple(train_index, current_descriptor_index));
-                target.emplace_back(current_descriptor_index);
+                mask.push_back(match[0]);
             }
         };
 
         std::for_each(std::begin(matched_keypoints), std::end(matched_keypoints),
                       select_match_by_threshold);
-        cv::findFundamentalMat(source, target, cv::FM_RANSAC, 3.0, 0.99, mask);
-        return mask;
-    }
-
-    cv::Mat FeatureExtraction::FindFundamentalMatrix(
-        const std::vector<std::optional<cv::DMatch>> &matches_keypoint,
-        const std::vector<cv::KeyPoint> &other_keypoint) const {
-        std::vector<std::tuple<cv::Point2f, cv::Point2f>> points_repository;
-        const auto point_selector_functor =
-            [&, other_keypoint, points_repository](const std::optional<cv::DMatch> &match) {
-                const auto &current_descriptor_index = keyPoints_[(*match).queryIdx].pt;
-                const auto &other_descriptor_index = other_keypoint[(*match).queryIdx].pt;
-                return std::make_tuple(current_descriptor_index, other_descriptor_index);
-            };
-
-        std::transform(std::begin(matches_keypoint), std::end(matches_keypoint),
-                       std::back_inserter(points_repository), point_selector_functor);
-        const auto transformer_first = [](const std::tuple<cv::Point2f, cv::Point2f> &tuple) {
-            return std::get<0>(tuple);
-        };
-
-        const auto transformer_second = [](const std::tuple<cv::Point2f, cv::Point2f> &tuple) {
-            return std::get<1>(tuple);
-        };
-        std::vector<cv::Point2f> source_points;
-        std::vector<cv::Point2f> target_points;
-        std::transform(std::begin(points_repository), std::end(points_repository),
-                       std::back_inserter(source_points), transformer_first);
-
-        std::transform(std::begin(points_repository), std::end(points_repository),
-                       std::back_inserter(source_points), transformer_second);
-        cv::Mat mask;
-        cv::findFundamentalMat(source_points, target_points, cv::FM_RANSAC, 3.0, 0.99, mask);
+        // cv::findFundamentalMat(source, target, cv::FM_RANSAC, 3.0, 0.99, mask);
         return mask;
     }
 
     FeatureExtraction::KeyPointId FeatureExtraction::getId() const { return keypoint_id_; }
 
-    void FeatureExtraction::setKeyPointId(const std::uint32_t &image_id) noexcept {
+    void FeatureExtraction::setKeyPointId(const FeatureExtraction::KeyPointId &image_id) noexcept {
         keypoint_id_ = image_id;
     }
 
@@ -144,10 +95,18 @@ namespace NSFeatureExtraction {
         return current_state_;
     }
 
-    void FeatureExtraction::setExternalMatchedKeyPoints(
-        const KeyPointId &id, const std::vector<std::optional<cv::DMatch>> &matches) {
-        if (kp_matched_in_other_images.find(id) == std::end(kp_matched_in_other_images)) {
-            kp_matched_in_other_images.insert(std::make_pair(id, matches));
+    FeatureExtraction::KeyPointInfoUnit FeatureExtraction::getKeyPointInfoUnit() const {
+        return {keypoint_id_, keyPoints_, descriptor_};
+    }
+
+    void FeatureExtraction::SetExternalKeyPoints(const FeatureExtraction::KeyPointId &KpId,
+                                                 const MatchedKeyPoints matches) {
+        const auto &iterator = kp_matched_in_other_images.find(KpId);
+        if (iterator == std::end(kp_matched_in_other_images)) {
+            kp_matched_in_other_images.insert(std::make_pair(KpId, MatchedPointContainer{matches}));
+        } else {
+            kp_matched_in_other_images[KpId].emplace_back(matches);
         }
     }
+
 } // namespace NSFeatureExtraction

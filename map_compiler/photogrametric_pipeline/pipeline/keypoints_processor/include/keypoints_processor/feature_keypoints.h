@@ -19,10 +19,13 @@ namespace NSFeatureExtraction {
         using KeyPointId = std::uint32_t;
         using ImageId = std::size_t;
         using GlobalKeyPointId = std::tuple<ImageId, KeyPointId>;
-        using ExternalMatchedKeyPoints =
-            std::tuple<KeyPointId, std::vector<std::optional<cv::DMatch>>>;
-        using ExternalKeyPointMap =
-            std::unordered_map<KeyPointId, std::vector<std::optional<cv::DMatch>>>;
+        using KeyPoints = std::vector<cv::KeyPoint>;
+        using KeyPointDescriptor = cv::Mat;
+        using MatchedKeyPoints = std::vector<cv::DMatch>;
+        using MatchedPointContainer = std::vector<MatchedKeyPoints>;
+        using ExternalKeyPointMap = std::unordered_map<KeyPointId, std::vector<MatchedKeyPoints>>;
+        using KeyPointInfoUnit = std::tuple<KeyPointId, KeyPoints, KeyPointDescriptor>;
+
         constexpr static int KNN_BEST_MATCHED_VALUE{4};
         constexpr static float MATCH_RATIO_THRESHOLD{0.7f};
         explicit FeatureExtraction(const int max_features, const float match_percent_aceptable,
@@ -32,16 +35,11 @@ namespace NSFeatureExtraction {
         // TODO: Remove this and apply Resource adquisition is Initialization idiom
         void setRawImage(const cv::Mat &raw_image);
 
-        std::vector<std::optional<cv::DMatch>> match(const FeatureExtraction &other_descriptor);
-        std::vector<std::optional<cv::DMatch>> match(const cv::Mat &descriptor,
-                                                     const std::vector<cv::KeyPoint> &keypoints);
-        std::vector<cv::Mat>
-        FilterMatches(const std::vector<std::vector<cv::DMatch>> &matched_keypoints,
-                      const std::vector<cv::KeyPoint> &other_keypoint) const;
+        void match(const KeyPointInfoUnit &kp_unit);
 
-        cv::Mat
+        /*cv::Mat
         FindFundamentalMatrix(const std::vector<std::optional<cv::DMatch>> &matched_keypoints,
-                              const std::vector<cv::KeyPoint> &other_descriptor) const;
+                              const std::vector<cv::KeyPoint> &other_descriptor) const;*/
 
         FEATURE_CONSTANTS::KEYPROCESS_INFO currentState() const;
 
@@ -51,23 +49,23 @@ namespace NSFeatureExtraction {
         const std::vector<cv::KeyPoint> getKeyPointContainer() const;
         std::vector<cv::KeyPoint> getKeyPoints() const;
         cv::Mat getKeyPointDescriptor() const;
-
+        KeyPointInfoUnit getKeyPointInfoUnit() const;
         void setKeyPointId(const std::uint32_t &image_id) noexcept;
         cv::Mat getDescriptor() const;
-
-        void setExternalMatchedKeyPoints(const KeyPointId &id,
-                                         const std::vector<std::optional<cv::DMatch>> &matches);
 
         private:
         void checkPreliminars();
         void checkImageIsNotEmpty();
         void checkMatcherIsSet();
 
+        void SetExternalKeyPoints(const KeyPointId &KpId, const MatchedKeyPoints matches);
         KeyPointId getId() const;
+        std::vector<cv::DMatch>
+        FilterMatches(const std::vector<std::vector<cv::DMatch>> &matched_keypoints) const;
 
         const int max_features_;
         const float match_percent_aceptable_;
-        std::vector<cv::KeyPoint> keyPoints_;
+        KeyPoints keyPoints_;
         cv::Mat descriptor_;
         // ORB Detector
         cv::Ptr<cv::Feature2D> orb_detector_;
