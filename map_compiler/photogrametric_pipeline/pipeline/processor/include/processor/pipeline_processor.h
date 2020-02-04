@@ -1,10 +1,10 @@
 #ifndef __PIPELINE_PROCESSOR_PROCESSING_H__
 #define __PIPELINE_PROCESSOR_PROCESSING_H__
 
-#include "feature_definitions.h"
-#include "feature_extraction_config.h"
-#include "feature_extraction_task.h"
 #include "interfaces/pipeline_process_interface.h"
+#include "keypoints_processor/feature_definitions.h"
+#include "keypoints_processor/feature_extraction_config.h"
+#include "keypoints_processor/feature_extraction_task.h"
 namespace NSFeatureExtraction {
     class MultiThreadFeatureProcessing : public IPipelineProcess {
 

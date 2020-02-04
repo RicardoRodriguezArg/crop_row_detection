@@ -2,9 +2,9 @@
 #include "keypoints_processor/feature_extraction_config.h"
 #include "keypoints_processor/feature_extraction_task.h"
 #include "keypoints_processor/feature_keypoints.h"
-#include "keypoints_processor/pipeline_processor.h"
+
 #include "utils/cv_utils.h"
-//#include "keypoints_processor/keypoints_repository.h"
+
 #include <glog/logging.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -73,28 +73,6 @@ namespace Pipeline_keypoints_processor {
         cv::Size expected_size{32, 116};
         ASSERT_EQ(expected_size, keypoint_descriptor.size())
             << "keypoints descriptor for test image is " << keypoint_descriptor.size();
-    }
-
-    TEST(KEYPOINT_EXTRACTION_MULTITHREAD_APPROACH, EXTRACT_FEATURE_MULTIPLE_IMAGES_OK) {
-        // parameters for Multithread processing
-        const int max_thread_count{4};
-        NSFeatureExtraction::MultiThreadFeatureProcessing feature_processing{"./resources",
-                                                                             max_thread_count};
-        feature_processing.extractKeypointFeature();
-        ASSERT_EQ(feature_processing.getImagesProcessingCount(),
-                  feature_processing.getFeatureExtractionContainer().size());
-        // load image mat from file
-    }
-
-    TEST(KEYPOINT_EXTRACTION_MULTITHREAD_APPROACH,
-         EXTRACT_FEATURE_MULTIPLE_IMAGES_PARAMETER_CHECK_TUNNING_OK) {
-        // parameters for Multithread processing
-        const int max_thread_count{10};
-        NSFeatureExtraction::MultiThreadFeatureProcessing feature_processing{"./resources",
-                                                                             max_thread_count};
-        feature_processing.extractKeypointFeature();
-        ASSERT_EQ(feature_processing.getImagesProcessingCount(),
-                  feature_processing.getFeatureExtractionContainer().size());
     }
 
 } // namespace Pipeline_keypoints_processor

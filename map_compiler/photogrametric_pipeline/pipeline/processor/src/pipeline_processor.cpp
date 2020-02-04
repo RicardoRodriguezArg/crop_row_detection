@@ -1,4 +1,4 @@
-#include "keypoints_processor/pipeline_processor.h"
+#include "processor/pipeline_processor.h"
 #include <algorithm>
 #include <filesystem>
 #include <glog/logging.h>

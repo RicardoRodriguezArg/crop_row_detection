@@ -1,4 +1,4 @@
-project(motion_recovery_tests)
+project(ortho_processor_tests)
 cmake_minimum_required(VERSION 3.5)
 find_package(OpenCV REQUIRED)
 set(HDRS)
@@ -10,13 +10,12 @@ target_link_libraries(
   ${PROJECT_NAME}
   gtest
   gmock
-  gtest_main
   OpenCV
   ${CMAKE_THREAD_LIBS_INIT}
   PIPELINE_UTILS::Pipeline_utils
   PIPELINE::KEYPOINT_PROC_LIB
   PIPELINE::INTERFACES
-  PIPELINE::MOTION_RECOVERY_LIB)
+  PIPELINE::ORTHO_PROCESSOR_LIB)
 
 gtest_add_tests(TARGET ${PROJECT_NAME} TEST_SUFFIX .noArgs TEST_LIST
                 noArgsTests)
@@ -29,4 +28,4 @@ add_custom_command(
   PRE_BUILD
   COMMAND
     ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/resources/
-    $<TARGET_FILE_DIR:motion_recovery_tests>/resources/)
+    $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources/)

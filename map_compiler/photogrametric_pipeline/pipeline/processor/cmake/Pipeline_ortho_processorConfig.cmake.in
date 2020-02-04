@@ -1,0 +1,6 @@
+get_filename_component(Pipeline_ortho_processor_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+if(NOT TARGET Pipeline::ortho_processor)
+    include("${Pipeline_ortho_processor_CMAKE_DIR}/ortho_processor-target.cmake")
+endif()
