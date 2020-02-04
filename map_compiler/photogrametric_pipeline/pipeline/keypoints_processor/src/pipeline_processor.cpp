@@ -1,4 +1,4 @@
-#include "keypoints_processor/feature_processing_task_based.h"
+#include "keypoints_processor/pipeline_processor.h"
 #include <algorithm>
 #include <filesystem>
 #include <glog/logging.h>
@@ -9,6 +9,7 @@ namespace NSFeatureExtraction {
 
     {}
 
+    void MultiThreadFeatureProcessing::setupInitialMatrix() const {}
     void MultiThreadFeatureProcessing::extractKeypointFeature() {
         if (is_config_using_default_values) {
             LOG(INFO) << "Using Default Values, config was not setup";
@@ -31,9 +32,6 @@ namespace NSFeatureExtraction {
                 current_thread_index = 0;
             }
         }
-        // 1.- Launch all image thread in paralell for keypoint and descripptors
-        // vectors extraction 2.- find matches in parallel, create map related of the
-        // keypoints and landmarks 3.- Find fundamental/Perspective matrix
     }
 
     bool

@@ -1,5 +1,5 @@
-#ifndef __PIPELINE_FEATURE_PROCESSING_H__
-#define __PIPELINE_FEATURE_PROCESSING_H__
+#ifndef __PIPELINE_PROCESSOR_PROCESSING_H__
+#define __PIPELINE_PROCESSOR_PROCESSING_H__
 
 #include "feature_definitions.h"
 #include "feature_extraction_config.h"
@@ -18,6 +18,7 @@ namespace NSFeatureExtraction {
         std::size_t getImagesProcessingCount();
         void extractKeypointFeature() override;
         void FoundMatchedKeyPoints() override;
+        void setupInitialMatrix() const;
 
         private:
         bool isValidKeyPoint(const FeatureExtractionTask &feature_task) const;
