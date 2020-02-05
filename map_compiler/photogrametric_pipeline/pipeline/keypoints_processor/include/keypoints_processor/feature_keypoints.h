@@ -15,6 +15,18 @@ namespace NSFeatureExtraction {
 
     class FeatureExtraction {
         public:
+        /*
+        TODO: extract to config file
+         Downsample the image to speed up processing
+         */
+
+        static constexpr double IMAGE_DOWNSAMPLING = 1.0;
+        /*
+        Focal length in pixels, after downsampling, guess from
+                                       jpeg EXIF data
+        */
+        static constexpr double FOCAL_LENGTH = 4308.0 / IMAGE_DOWNSAMPLING;
+
         using FeatureExtractionPtr = std::unique_ptr<FeatureExtraction>;
         using KeyPointId = std::uint32_t;
         using ImageId = std::size_t;
@@ -25,6 +37,9 @@ namespace NSFeatureExtraction {
         using MatchedPointContainer = std::vector<MatchedKeyPoints>;
         using ExternalKeyPointMap = std::unordered_map<KeyPointId, std::vector<MatchedKeyPoints>>;
         using KeyPointInfoUnit = std::tuple<KeyPointId, KeyPoints, KeyPointDescriptor>;
+        using CameraWidth = double;
+        using CameraHeigth = double;
+        using CameraMatrixSetting = std::tuple<CameraWidth, CameraHeigth>;
 
         constexpr static int KNN_BEST_MATCHED_VALUE{4};
         constexpr static float MATCH_RATIO_THRESHOLD{0.7f};
@@ -37,10 +52,6 @@ namespace NSFeatureExtraction {
 
         void match(const KeyPointInfoUnit &kp_unit);
 
-        /*cv::Mat
-        FindFundamentalMatrix(const std::vector<std::optional<cv::DMatch>> &matched_keypoints,
-                              const std::vector<cv::KeyPoint> &other_descriptor) const;*/
-
         FEATURE_CONSTANTS::KEYPROCESS_INFO currentState() const;
 
         cv::Mat createPerpestiveMatrix(const std::vector<cv::DMatch> &matches,
@@ -52,6 +63,10 @@ namespace NSFeatureExtraction {
         KeyPointInfoUnit getKeyPointInfoUnit() const;
         void setKeyPointId(const std::uint32_t &image_id) noexcept;
         cv::Mat getDescriptor() const;
+
+        static cv::Mat createCameraMatrix(const CameraMatrixSetting &camera_setting);
+        void initializeProyectionMatrix(const cv::Mat &CameraMatrix);
+        void initializeTransformMatrix();
 
         private:
         void checkPreliminars();
@@ -74,6 +89,9 @@ namespace NSFeatureExtraction {
         KeyPointId keypoint_id_ = {};
         ExternalKeyPointMap kp_matched_in_other_images;
         FEATURE_CONSTANTS::KEYPROCESS_INFO current_state_;
+        // matrix for pose use
+        cv::Mat proyectin_matrix_;
+        cv::Mat transformation_matrix_;
     };
 } // namespace NSFeatureExtraction
 #endif

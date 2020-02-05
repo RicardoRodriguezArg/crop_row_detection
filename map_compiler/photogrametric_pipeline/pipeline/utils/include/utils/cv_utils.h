@@ -6,6 +6,7 @@ namespace NSFeatureExtraction {
     struct Utils {
         static cv::Mat convertToGreyScale(const cv::Mat &image);
         static cv::Mat loadImageFromFileName(const std::string &image_filename);
+        static std::tuple<double, double> getImageDimension(const std::string &image_filename);
     };
 } // namespace NSFeatureExtraction
 #endif

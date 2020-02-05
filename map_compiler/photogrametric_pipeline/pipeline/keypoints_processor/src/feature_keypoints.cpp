@@ -109,4 +109,23 @@ namespace NSFeatureExtraction {
         }
     }
 
+    cv::Mat FeatureExtraction::createCameraMatrix(
+        const FeatureExtraction::CameraMatrixSetting &camera_setting) {
+        cv::Mat cameraMatrix = cv::Mat::eye(3, 3, CV_64F);
+
+        cameraMatrix.at<double>(0, 0) = FeatureExtraction::FOCAL_LENGTH;
+        cameraMatrix.at<double>(1, 1) = FeatureExtraction::FOCAL_LENGTH;
+        cameraMatrix.at<double>(0, 2) = std::get<0>(camera_setting);
+        cameraMatrix.at<double>(1, 2) = std::get<1>(camera_setting);
+        return cameraMatrix;
+    }
+
+    void FeatureExtraction::initializeProyectionMatrix(const cv::Mat &camera_matrix) {
+        proyectin_matrix_ = camera_matrix * cv::Mat::eye(3, 4, CV_64F);
+    }
+
+    void FeatureExtraction::initializeTransformMatrix() {
+        transformation_matrix_ = cv::Mat::eye(4, 4, CV_64F);
+    }
+
 } // namespace NSFeatureExtraction

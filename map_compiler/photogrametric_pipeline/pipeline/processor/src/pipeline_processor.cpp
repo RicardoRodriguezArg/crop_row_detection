@@ -60,6 +60,22 @@ namespace NSFeatureExtraction {
         }
     }
 
+    void MultiThreadFeatureProcessing::setupInitialImagePoseMatrix() {
+        // TODO: create method to check image size on all input set
+        if (!files_to_process.empty()) {
+            const auto &image_size = Utils::getImageDimension(files_to_process.front());
+            const auto &cameraMatrix =
+                NSFeatureExtraction::FeatureExtraction::createCameraMatrix(image_size);
+            feature_container_.at(0).setInitialsCameraMatrix(cameraMatrix);
+        }
+    }
+
+    void MultiThreadFeatureProcessing::computeMotionRecovery() {
+        setupInitialImagePoseMatrix();
+        for (const auto &image_processor : feature_container_) {
+        }
+    }
+
     void MultiThreadFeatureProcessing::extractFilenamesToProcess() {
         namespace fs = std::filesystem;
         for (auto &entry : fs::directory_iterator(directory_path_)) {
