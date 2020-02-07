@@ -72,8 +72,12 @@ namespace NSFeatureExtraction {
 
     void MultiThreadFeatureProcessing::computeMotionRecovery() {
         setupInitialImagePoseMatrix();
-        for (const auto &image_processor : feature_container_) {
-        }
+        const auto functor = [](const auto &current, const auto &next) {
+            const auto &essentialMatrix = current.findEssentialMatrix(next.getKeyPointInfoUnit())
+            // should check is not empty
+        };
+        Generics::iterate_over_all_in_pairs(std::begin(feature_container_),
+                                            std::end(feature_container_), functor);
     }
 
     void MultiThreadFeatureProcessing::extractFilenamesToProcess() {

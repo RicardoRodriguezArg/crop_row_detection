@@ -63,6 +63,10 @@ namespace NSFeatureExtraction {
             keypoint_processor_ptr->initializeTransformMatrix();
             keypoint_processor_ptr->initializeProyectionMatrix(camera_matrix);
         }
+        void
+        findEssentialMatrix(const FeatureExtraction::KeyPointInfoUnit &another_keypoints) const {
+            keypoint_processor_ptr->findEssentialMatrix(another_keypoints);
+        }
 
         private:
         std::unique_ptr<FeatureExtraction> keypoint_processor_ptr;

@@ -61,12 +61,16 @@ namespace NSFeatureExtraction {
         std::vector<cv::KeyPoint> getKeyPoints() const;
         cv::Mat getKeyPointDescriptor() const;
         KeyPointInfoUnit getKeyPointInfoUnit() const;
+        const KeyPointInfoUnit getKeyPointInfoUnitNonMutable() const;
         void setKeyPointId(const std::uint32_t &image_id) noexcept;
         cv::Mat getDescriptor() const;
 
         static cv::Mat createCameraMatrix(const CameraMatrixSetting &camera_setting);
         void initializeProyectionMatrix(const cv::Mat &CameraMatrix);
         void initializeTransformMatrix();
+        void findEssentialMatrix(const KeyPointInfoUnit &another_keypoints);
+        void recoverPose(const std::vector<cv::Point2f> &src,
+                         const std::vector<cv::Point2f> &target);
 
         private:
         void checkPreliminars();
@@ -90,8 +94,18 @@ namespace NSFeatureExtraction {
         ExternalKeyPointMap kp_matched_in_other_images;
         FEATURE_CONSTANTS::KEYPROCESS_INFO current_state_;
         // matrix for pose use
-        cv::Mat proyectin_matrix_;
+        cv::Mat proyection_matrix_;
+        cv::Mat camera_matrix_;
         cv::Mat transformation_matrix_;
+        double central_x_pos_;
+        double central_y_pos_;
+        cv::Mat current_essential_mask_;
+        cv::Mat essential_matrix_;
+        // local transform
+        cv::Mat local_rotation_;
+        cv::Mat local_transform_;
+        // sources point position matched
+        std::vector<cv::Point2f> source_points_;
     };
 } // namespace NSFeatureExtraction
 #endif

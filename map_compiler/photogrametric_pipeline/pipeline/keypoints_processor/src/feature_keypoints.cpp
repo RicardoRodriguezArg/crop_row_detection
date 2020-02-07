@@ -99,6 +99,11 @@ namespace NSFeatureExtraction {
         return {keypoint_id_, keyPoints_, descriptor_};
     }
 
+    const FeatureExtraction::KeyPointInfoUnit
+    FeatureExtraction::getKeyPointInfoUnitNonMutable() const {
+        return {keypoint_id_, keyPoints_, descriptor_};
+    }
+
     void FeatureExtraction::SetExternalKeyPoints(const FeatureExtraction::KeyPointId &KpId,
                                                  const MatchedKeyPoints matches) {
         const auto &iterator = kp_matched_in_other_images.find(KpId);
@@ -112,7 +117,6 @@ namespace NSFeatureExtraction {
     cv::Mat FeatureExtraction::createCameraMatrix(
         const FeatureExtraction::CameraMatrixSetting &camera_setting) {
         cv::Mat cameraMatrix = cv::Mat::eye(3, 3, CV_64F);
-
         cameraMatrix.at<double>(0, 0) = FeatureExtraction::FOCAL_LENGTH;
         cameraMatrix.at<double>(1, 1) = FeatureExtraction::FOCAL_LENGTH;
         cameraMatrix.at<double>(0, 2) = std::get<0>(camera_setting);
@@ -121,11 +125,81 @@ namespace NSFeatureExtraction {
     }
 
     void FeatureExtraction::initializeProyectionMatrix(const cv::Mat &camera_matrix) {
-        proyectin_matrix_ = camera_matrix * cv::Mat::eye(3, 4, CV_64F);
+        camera_matrix_ = camera_matrix * cv::Mat::eye(3, 4, CV_64F);
+        central_x_pos_ = camera_matrix.at<double>(0, 2);
+        central_y_pos_ = camera_matrix.at<double>(1, 2);
     }
 
     void FeatureExtraction::initializeTransformMatrix() {
         transformation_matrix_ = cv::Mat::eye(4, 4, CV_64F);
+    }
+
+    void FeatureExtraction::findEssentialMatrix(const KeyPointInfoUnit &another_keypoints) {
+        essential_matrix_ = {};
+        current_essential_mask_ = {};
+        source_points_ = {};
+        const auto other_keypoint_id = std::get<0>(another_keypoints);
+        LOG(INFO) << "trying to locate KeyPoint ID: " << other_keypoint_id;
+        const auto &matches = kp_matched_in_other_images.find(other_keypoint_id);
+        if (matches != std::end(kp_matched_in_other_images)) {
+            LOG(INFO) << "KeyPoint Matched!";
+            std::vector<cv::Point2f> src_points_pos;
+            std::vector<cv::Point2f> other_point_pos;
+            const auto other_keypoints = std::get<1>(another_keypoints);
+            for (const auto &match : matches->second) {
+                const auto src_pos = keyPoints_[match[0].queryIdx].pt;
+                src_points_pos.emplace_back(src_pos);
+                const auto target_pos = other_keypoints[match[0].trainIdx].pt;
+                other_point_pos.emplace_back(src_pos);
+            }
+            essential_matrix_ = cv::findEssentialMat(
+                other_point_pos, src_points_pos, FeatureExtraction::FOCAL_LENGTH,
+                cv::Point2d{central_x_pos_, central_y_pos_}, cv::RANSAC, 0.999, 1.0,
+                current_essential_mask_);
+            source_points_ = src_points_pos;
+        }
+    }
+
+    void FeatureExtraction::recoverPose(const std::vector<cv::Point2f> &target) {
+        local_rotation_ = {};
+        local_transform_ = {};
+
+        cv::recoverPose(essential_matrix_, target, source_points_, local_rotation_,
+                        local_transform_, FeatureExtraction::FOCAL_LENGTH,
+                        cv::Point2d{central_x_pos_, central_y_pos_}, current_essential_mask_);
+    }
+
+    cv::Mat FeatureExtraction::getCurrentTransform() const { return transformation_matrix_; }
+
+    std::vector<cv::Point2f> FeatureExtraction::getSourcePointPosition() const {
+        return source_points_;
+    }
+    void FeatureExtraction::accumulateTransform(const cv::Mat &previous_transform) {
+        Mat local_transform_frame = cv::Mat::eye(4, 4, CV_64F);
+        local_rotation_.copyTo(local_transform_frame(cv::Range(0, 3), cv::Range(0, 3)));
+        local_transform_.copyTo(local_transform_frame(cv::Range(0, 3), cv::Range(3, 4)));
+        // accumulate points
+        transformation_matrix_ = previous_transform * local_transform_frame;
+    }
+
+    void FeatureExtraction::computeProjectionMatrix() {
+        // make projection matrix
+        proyectin_matrix_ = {};
+        cv::Mat rotation_matrix_range = transformation_matrix_(cv::Range(0, 3), cv::Range(0, 3));
+        cv::Mat translation_matrix_range = transformation_matrix_(cv::Range(0, 3), cv::Range(3, 4));
+        cv::Mat projection_matrix(3, 4, CV_64F);
+        projection_matrix(cv::Range(0, 3), cv::Range(0, 3)) = rotation_matrix_range.t();
+        projection_matrix(cv::Range(0, 3), cv::Range(3, 4)) =
+            -rotation_matrix_range.t() * translation_matrix_range;
+        proyectin_matrix_ = camera_matrix_ * projection_matrix
+    }
+
+    cv::Mat FeatureExtraction::triangulatePoints(, const std::vector<cv::Point2f> &target_points,
+                                                 const cv::Mat &next_projection_matrix, ) const {
+        cv::Mat points4D;
+        cv::triangulatePoints(proyectin_matrix_, next_projection_matrix, source_points_,
+                              target_points, points4D);
+        return points4D;
     }
 
 } // namespace NSFeatureExtraction
