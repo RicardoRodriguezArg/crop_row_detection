@@ -73,7 +73,8 @@ namespace NSFeatureExtraction {
     void MultiThreadFeatureProcessing::computeMotionRecovery() {
         setupInitialImagePoseMatrix();
         const auto functor = [](const auto &current, const auto &next) {
-            const auto &essentialMatrix = current.findEssentialMatrix(next.getKeyPointInfoUnit())
+            current.findEssentialMatrix(next.getKeyPointInfoUnit());
+            // current.recoverPose();
             // should check is not empty
         };
         Generics::iterate_over_all_in_pairs(std::begin(feature_container_),

@@ -11,6 +11,10 @@ namespace NSConfig {
 
         FeatureExtracionConfig()
             : max_features_(100), match_percent_aceptable_(0.75), descriptor_name_("FlannBased") {}
+        FeatureExtracionConfig(const FeatureExtracionConfig &Other)
+            : max_features_(Other.max_features_),
+              match_percent_aceptable_(Other.match_percent_aceptable_),
+              descriptor_name_(Other.descriptor_name_) {}
 
         FeatureExtracionConfig operator=(const FeatureExtracionConfig &other) {
             return {other.max_features_, other.match_percent_aceptable_, other.descriptor_name_};

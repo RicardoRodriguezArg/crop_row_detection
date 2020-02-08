@@ -2,13 +2,14 @@
 FROM nvidia/cuda:9.1-devel
 #install Opencv Dependencies
 RUN apt-get update
-#cmake for c++17
 RUN apt-get update
 RUN apt-get install software-properties-common -y
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test
+RUN apt-get update
 RUN apt-get install apt-transport-https ca-certificates gnupg wget -y
 RUN add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security main"
 RUN apt-get update
+
 RUN apt-get install python3-dev python3-numpy -y
 RUN apt-get install git unzip pkg-config -y
 RUN apt-get install libjpeg8-dev libpng12-dev libtiff-dev libjasper-dev libjasper1 libavcodec-dev libavformat-dev libswscale-dev -y
@@ -60,11 +61,17 @@ WORKDIR /home/Documents
 RUN git clone https://github.com/eigenteam/eigen-git-mirror.git eigen
 RUN cd eigen && mkdir build && cd build && cmake .. && make -j 4&& make install && ldconfig
 #
+WORKDIR /home/Documents
+RUN git clone https://github.com/google/glog.git
+RUN cd glog && mkdir -p build && cd build && cmake .. -Bbuild -G "Unix Makefiles" && cmake --build build && cmake --build build --target install && ldconfig
+
 #install Ceres
 WORKDIR /home/Documents
 RUN git clone https://ceres-solver.googlesource.com/ceres-solver
 RUN cd ceres-solver && mkdir build && cd build && cmake .. && make -j 4 && make install && ldconfig
+
 #
+WORKDIR /home/Documents
 RUN wget https://bootstrap.pypa.io/get-pip.py
 RUN python3 get-pip.py
 RUN pip install numpy
@@ -78,9 +85,6 @@ RUN cd opencv && mkdir build&& cd build && cmake -D CMAKE_BUILD_TYPE=RELEASE \
 RUN sh -c 'echo "/usr/local/lib" >> /etc/ld.so.conf.d/opencv.conf'
 #Specific dependency for Photogrametric pipeline
 #install GLOG
-WORKDIR /home/Documents
-RUN git clone https://github.com/google/glog.git
-RUN cd glog && mkdir -p build && cmake .. -Bbuild -G "Unix Makefiles" && cmake --build build && cmake --build build --target install && ldconfig
 
 #install VTK
 

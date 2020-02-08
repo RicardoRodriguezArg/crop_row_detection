@@ -29,13 +29,15 @@ namespace NSFeatureExtraction {
 
         using FeatureExtractionPtr = std::unique_ptr<FeatureExtraction>;
         using KeyPointId = std::uint32_t;
-        using ImageId = std::size_t;
+        using ImageId = std::uint32_t;
+        using LandMarkId = std::uint32_t;
         using GlobalKeyPointId = std::tuple<ImageId, KeyPointId>;
         using KeyPoints = std::vector<cv::KeyPoint>;
         using KeyPointDescriptor = cv::Mat;
         using MatchedKeyPoints = std::vector<cv::DMatch>;
         using MatchedPointContainer = std::vector<MatchedKeyPoints>;
-        using ExternalKeyPointMap = std::unordered_map<KeyPointId, std::vector<MatchedKeyPoints>>;
+        using ExternalKeyPointMap = std::unordered_map<ImageId, std::vector<MatchedKeyPoints>>;
+        using LandMarkRepo = std::unordered_map<KeyPointId, LandMarkId>;
         using KeyPointInfoUnit = std::tuple<KeyPointId, KeyPoints, KeyPointDescriptor>;
         using CameraWidth = double;
         using CameraHeigth = double;
@@ -62,7 +64,7 @@ namespace NSFeatureExtraction {
         cv::Mat getKeyPointDescriptor() const;
         KeyPointInfoUnit getKeyPointInfoUnit() const;
         const KeyPointInfoUnit getKeyPointInfoUnitNonMutable() const;
-        void setKeyPointId(const std::uint32_t &image_id) noexcept;
+        void setImageId(const ImageId &image_id) noexcept;
         cv::Mat getDescriptor() const;
 
         static cv::Mat createCameraMatrix(const CameraMatrixSetting &camera_setting);
@@ -72,16 +74,30 @@ namespace NSFeatureExtraction {
         void recoverPose(const std::vector<cv::Point2f> &src,
                          const std::vector<cv::Point2f> &target);
 
+        bool isLandMarkIdInRepo(const KeyPointId &KpId) const;
+        void setLandMarkIdInRepo(const KeyPointId &KpId, const LandMarkId &landmark_id);
+        void recoverPose(const std::vector<cv::Point2f> &target);
+        cv::Mat getCurrentTransform() const;
+        void accumulateTransform(const cv::Mat &previous_transform);
+
+        void computeProjectionMatrix();
+        cv::Mat triangulatePoints(const std::vector<cv::Point2f> &target_points,
+                                  const cv::Mat &next_projection_matrix) const;
+
+        bool KeyPointMatchExist(const ImageId &image_id, const KeyPointId &keypoint_id) const;
+        std::vector<cv::Point2f> getSourcePointPosition() const;
+        void pairing3DPoints(const cv::Mat other_4D_points);
+
         private:
         void checkPreliminars();
         void checkImageIsNotEmpty();
         void checkMatcherIsSet();
 
         void SetExternalKeyPoints(const KeyPointId &KpId, const MatchedKeyPoints matches);
-        KeyPointId getId() const;
+        ImageId getId() const;
         std::vector<cv::DMatch>
         FilterMatches(const std::vector<std::vector<cv::DMatch>> &matched_keypoints) const;
-
+        void generate_keypoint_ids();
         const int max_features_;
         const float match_percent_aceptable_;
         KeyPoints keyPoints_;
@@ -90,7 +106,7 @@ namespace NSFeatureExtraction {
         cv::Ptr<cv::Feature2D> orb_detector_;
         cv::Ptr<cv::DescriptorMatcher> matcher_;
         cv::Mat image_ = {};
-        KeyPointId keypoint_id_ = {};
+        ImageId image_id_ = {};
         ExternalKeyPointMap kp_matched_in_other_images;
         FEATURE_CONSTANTS::KEYPROCESS_INFO current_state_;
         // matrix for pose use
@@ -106,6 +122,8 @@ namespace NSFeatureExtraction {
         cv::Mat local_transform_;
         // sources point position matched
         std::vector<cv::Point2f> source_points_;
+        // landmarks
+        LandMarkRepo lank_marks_repo;
     };
 } // namespace NSFeatureExtraction
 #endif
