@@ -71,9 +71,6 @@ namespace NSFeatureExtraction {
         void initializeProyectionMatrix(const cv::Mat &CameraMatrix);
         void initializeTransformMatrix();
         void findEssentialMatrix(const KeyPointInfoUnit &another_keypoints);
-        void recoverPose(const std::vector<cv::Point2f> &src,
-                         const std::vector<cv::Point2f> &target);
-
         bool isLandMarkIdInRepo(const KeyPointId &KpId) const;
         void setLandMarkIdInRepo(const KeyPointId &KpId, const LandMarkId &landmark_id);
         void recoverPose(const std::vector<cv::Point2f> &target);

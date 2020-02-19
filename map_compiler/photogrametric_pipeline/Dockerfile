@@ -22,7 +22,7 @@ RUN apt-get install qt5-default libgtk2.0-dev libtbb-dev -y
 RUN apt-get install libprotobuf-dev protobuf-compiler -y
 #RUN apt-get install libgoogle-glog-dev libgflags-dev -y
 
-RUN apt-get install libgphoto2-dev libeigen3-dev libhdf5-dev doxygen -y
+RUN apt-get install libgphoto2-dev libhdf5-dev doxygen -y
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 5
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 9
 RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9
@@ -59,7 +59,8 @@ RUN git clone https://github.com/opencv/opencv_contrib.git
 RUN cd opencv_contrib && git checkout 3.3.1 
 WORKDIR /home/Documents
 RUN git clone https://github.com/eigenteam/eigen-git-mirror.git eigen
-RUN cd eigen && mkdir build && cd build && cmake .. && make -j 4&& make install && ldconfig
+RUN cd eigen && git checkout branches/3.0 && mkdir build && cd build && cmake .. && make -j 4&& make install && ldconfig
+
 #
 WORKDIR /home/Documents
 RUN git clone https://github.com/google/glog.git

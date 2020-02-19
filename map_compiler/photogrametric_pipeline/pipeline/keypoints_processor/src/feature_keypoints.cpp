@@ -244,10 +244,14 @@ namespace NSFeatureExtraction {
     }
 
     void FeatureExtraction::pairing3DPoints(const cv::Mat other_4D_points) {
-        double scale = 0;
+        double scale = 0.0;
         int count = 0;
-
         cv::Point3f prev_camera;
+        prev_camera.x = transformation_matrix_.at<double>(0, 3);
+        prev_camera.y = transformation_matrix_.at<double>(1, 3);
+        prev_camera.z = transformation_matrix_.at<double>(2, 3);
+        std::vector<cv::Point3f> new_pts;
+        std::vector<cv::Point3f> existing_pts;
     }
 
 } // namespace NSFeatureExtraction

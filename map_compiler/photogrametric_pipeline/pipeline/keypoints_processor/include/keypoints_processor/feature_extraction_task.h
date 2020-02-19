@@ -59,13 +59,23 @@ namespace NSFeatureExtraction {
         FeatureExtraction::KeyPointInfoUnit getKeyPointInfoUnit() const {
             return keypoint_processor_ptr->getKeyPointInfoUnit();
         }
+
         void setInitialsCameraMatrix(const cv::Mat &camera_matrix) {
             keypoint_processor_ptr->initializeTransformMatrix();
             keypoint_processor_ptr->initializeProyectionMatrix(camera_matrix);
         }
+
         void
         findEssentialMatrix(const FeatureExtraction::KeyPointInfoUnit &another_keypoints) const {
             keypoint_processor_ptr->findEssentialMatrix(another_keypoints);
+        }
+
+        void recoverPose(const std::vector<cv::Point2f> &target) const {
+            keypoint_processor_ptr->recoverPose(target);
+        }
+
+        std::vector<cv::Point2f> getSourcePointPosition() const {
+            keypoint_processor_ptr->getSourcePointPosition();
         }
 
         private:

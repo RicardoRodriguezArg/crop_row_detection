@@ -74,7 +74,8 @@ namespace NSFeatureExtraction {
         setupInitialImagePoseMatrix();
         const auto functor = [](const auto &current, const auto &next) {
             current.findEssentialMatrix(next.getKeyPointInfoUnit());
-            // current.recoverPose();
+            const auto &next_source_points = next.getSourcePointPosition();
+            current.recoverPose(next_source_points);
             // should check is not empty
         };
         Generics::iterate_over_all_in_pairs(std::begin(feature_container_),
