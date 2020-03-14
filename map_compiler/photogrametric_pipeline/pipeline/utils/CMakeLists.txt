@@ -15,7 +15,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS} gflags
 target_include_directories(${PROJECT_NAME}
     PUBLIC
        $<INSTALL_INTERFACE:include>
+       $<INSTALL_INTERFACE:include/active>
        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/active>
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_SOURCE_DIR}/include
