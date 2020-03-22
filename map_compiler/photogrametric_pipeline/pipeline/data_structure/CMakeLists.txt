@@ -63,4 +63,4 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 # adding testing directory
 enable_testing()
-add_subdirectory(test)
+#add_subdirectory(test)
