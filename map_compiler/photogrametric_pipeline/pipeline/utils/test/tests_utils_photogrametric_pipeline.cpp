@@ -1,5 +1,6 @@
 
 #include "utils/active/active_callbacks.h"
+#include "utils/active/active_object.h"
 #include "utils/cv_utils.h"
 #include "utils/factory_base.h"
 #include "utils/generic_factory.h"
@@ -84,6 +85,9 @@ namespace {
         const auto grey_image = NSFeatureExtraction::Utils::convertToGreyScale(image);
         EXPECT_EQ(false, grey_image.empty());
     }
+
+    TEST(CV_UTILS_TESTS, ACTIVE_OBJECT_TEST_HAPPY_PATH) { EXPECT_EQ(false, false); }
+
 } // namespace
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
