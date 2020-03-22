@@ -1,4 +1,5 @@
 
+#include "utils/active/active_callbacks.h"
 #include "utils/cv_utils.h"
 #include "utils/factory_base.h"
 #include "utils/generic_factory.h"
@@ -75,7 +76,7 @@ namespace {
         const auto image = NSFeatureExtraction::Utils::loadImageFromFileName(filename);
         EXPECT_EQ(true, image.empty());
     }
-    
+
     TEST(CV_UTILS_TESTS, CONVERT_IMAGE_TO_GREY_SCALE_OK) {
         const auto filename{"resources/image_a.png"};
         const auto image = NSFeatureExtraction::Utils::loadImageFromFileName(filename);
