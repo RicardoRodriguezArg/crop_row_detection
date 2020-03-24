@@ -118,7 +118,7 @@ namespace {
         EXPECT_NO_THROW(active_object.shutdown());
     }
 
-    TEST_F(ActiveObjectSetup, ACTIVE_OBJECT_TEST_MANY_ACTIVITIES) {
+    TEST_F(ActiveObjectSetup, ACTIVE_OBJECT_TEST_MANY_ACTIVITIES_FAST) {
         ActiveMock::EXECUTE_TASK_DELAY_MS = 5;
         ActiveCallBackMock::NOTIFY_TIME_MS = 10;
         setup_for_scenario_callback_create_many_activities();
@@ -135,7 +135,7 @@ namespace {
                 EXPECT_NO_THROW(active_object.execute_task_async(active_mock_collection[index]));
                 ++index;
             } else {
-                wait(1000);
+                wait(100);
             }
         }
 
@@ -147,6 +147,33 @@ namespace {
     TEST_F(ActiveObjectSetup, ACTIVE_OBJECT_TEST_MANY_ACTIVITIES_WITH_EMPTY_CALLBACKS) {
         ActiveMock::EXECUTE_TASK_DELAY_MS = 50;
 
+        ActiveCallBackMock::NOTIFY_TIME_MS = 100;
+        setup_for_scenario_callback_create_many_activities_with_empty_callback();
+        NSActive::ActiveObject active_object;
+        EXPECT_NO_THROW(active_object.init());
+        EXPECT_EQ(true, active_object.is_working());
+        EXPECT_EQ(false, active_object.is_data_ready());
+        EXPECT_EQ(true, active_object.is_free());
+        EXPECT_EQ(false, active_object.is_data_ready());
+
+        int index = 0;
+        while (index < callback_count) {
+            if (active_object.is_free()) {
+                EXPECT_NO_THROW(active_object.execute_task_async(active_mock_collection[index]));
+                ++index;
+            } else {
+                wait(100);
+            }
+        }
+
+        EXPECT_EQ(index, callback_count);
+        EXPECT_EQ(true, active_object.is_free());
+        EXPECT_NO_THROW(active_object.shutdown());
+    }
+
+    TEST_F(ActiveObjectSetup,
+           ACTIVE_OBJECT_TEST_MANY_ACTIVITIES_WITH_EMPTY_CALLBACKS_AND_EXECUTION_TIME_100MS) {
+        ActiveMock::EXECUTE_TASK_DELAY_MS = 100;
         ActiveCallBackMock::NOTIFY_TIME_MS = 100;
         setup_for_scenario_callback_create_many_activities_with_empty_callback();
         NSActive::ActiveObject active_object;
