@@ -83,16 +83,16 @@ namespace NSActive {
         }
 
         void run_async() {
-            // std::cout << "Starting thread" << std::endl;
+
             while (is_working_) {
                 std::unique_lock<std::mutex> unique_lock(mutex_);
-                // std::cout << "Executing task 1" << std::endl;
+
                 condition_variable_.wait_for(unique_lock, 10ms, [this] {
                     return data_ready_ == true || is_working_ == true;
                 });
-                // std::cout << "Executing task 2" << std::endl;
+
                 if (is_working_ && task_to_execute != nullptr) {
-                    // std::cout << "Executing task 3" << std::endl;
+
                     task_to_execute->execute_task();
                     if (task_to_execute->get_callback() != nullptr) {
                         task_to_execute->notify_with_callback();
@@ -103,6 +103,7 @@ namespace NSActive {
 
                 condition_variable_.notify_one();
                 unique_lock.unlock();
+                std::this_thread::yield();
             }
         }
 

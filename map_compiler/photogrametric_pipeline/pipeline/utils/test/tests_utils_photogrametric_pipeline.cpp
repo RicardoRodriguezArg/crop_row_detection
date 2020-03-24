@@ -119,7 +119,7 @@ namespace {
     }
 
     TEST_F(ActiveObjectSetup, ACTIVE_OBJECT_TEST_MANY_ACTIVITIES) {
-        ActiveCallBackMock::NOTIFY_TIME_MS = 5;
+        ActiveMock::EXECUTE_TASK_DELAY_MS = 5;
         ActiveCallBackMock::NOTIFY_TIME_MS = 10;
         setup_for_scenario_callback_create_many_activities();
         NSActive::ActiveObject active_object;
@@ -145,7 +145,8 @@ namespace {
     }
 
     TEST_F(ActiveObjectSetup, ACTIVE_OBJECT_TEST_MANY_ACTIVITIES_WITH_EMPTY_CALLBACKS) {
-        ActiveCallBackMock::NOTIFY_TIME_MS = 5;
+        ActiveMock::EXECUTE_TASK_DELAY_MS = 50;
+
         ActiveCallBackMock::NOTIFY_TIME_MS = 100;
         setup_for_scenario_callback_create_many_activities_with_empty_callback();
         NSActive::ActiveObject active_object;
