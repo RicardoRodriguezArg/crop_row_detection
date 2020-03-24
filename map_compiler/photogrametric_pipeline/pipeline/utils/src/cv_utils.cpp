@@ -12,6 +12,7 @@ namespace NSFeatureExtraction {
     cv::Mat Utils::loadImageFromFileName(const std::string &image_filename) {
         cv::Mat result_image;
         if (!image_filename.empty()) {
+            std::cout << "image not empty" << std::endl;
             result_image = cv::imread(image_filename, cv::IMREAD_COLOR);
         }
         return result_image;

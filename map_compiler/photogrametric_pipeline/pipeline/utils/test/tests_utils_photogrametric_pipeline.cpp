@@ -1,6 +1,5 @@
 
-#include "utils/active/active_callbacks.h"
-#include "utils/active/active_object.h"
+#include "active_object_fixture.h"
 #include "utils/cv_utils.h"
 #include "utils/factory_base.h"
 #include "utils/generic_factory.h"
@@ -86,10 +85,97 @@ namespace {
         EXPECT_EQ(false, grey_image.empty());
     }
 
-    TEST(CV_UTILS_TESTS, ACTIVE_OBJECT_TEST_HAPPY_PATH) { EXPECT_EQ(false, false); }
+    TEST_F(ActiveObjectSetup, ACTIVE_OBJECT_TEST_HAPPY_PATH_EMPTY_ACTIVE_INTERFACE) {
+        setup_for_normal_scenario();
+        NSActive::ActiveObject active_object;
+        active_object.init();
+        EXPECT_EQ(true, active_object.is_free());
+        active_object.execute_task_async(active_mock);
+        EXPECT_EQ(false, active_object.is_free());
+
+        EXPECT_NO_THROW(active_object.shutdown());
+    }
+
+    TEST_F(ActiveObjectSetup, ACTIVE_OBJECT_TEST_RUN_STESS_CYCLE_FOR_SANITY_CHECK) {
+        setup_for_normal_scenario();
+        NSActive::ActiveObject active_object;
+        EXPECT_NO_THROW(active_object.init());
+        EXPECT_EQ(true, active_object.is_free());
+        EXPECT_NO_THROW(active_object.execute_task_async(active_mock));
+
+        EXPECT_EQ(false, active_object.is_free());
+        EXPECT_NO_THROW(active_object.shutdown());
+    }
+
+    TEST_F(ActiveObjectSetup, ACTIVE_OBJECT_TEST_CALLBACK_RUNNING_AT_100_MS_AND_TASK_AT_10_MS) {
+        setup_for_scenario_callback_TOO_SLOW_TASK_VERY_FAST();
+        NSActive::ActiveObject active_object;
+        EXPECT_NO_THROW(active_object.init());
+        EXPECT_EQ(true, active_object.is_free());
+        EXPECT_NO_THROW(active_object.execute_task_async(active_mock));
+
+        EXPECT_EQ(false, active_object.is_free());
+        EXPECT_NO_THROW(active_object.shutdown());
+    }
+
+    TEST_F(ActiveObjectSetup, ACTIVE_OBJECT_TEST_MANY_ACTIVITIES) {
+        ActiveCallBackMock::NOTIFY_TIME_MS = 5;
+        ActiveCallBackMock::NOTIFY_TIME_MS = 10;
+        setup_for_scenario_callback_create_many_activities();
+        NSActive::ActiveObject active_object;
+        EXPECT_NO_THROW(active_object.init());
+        EXPECT_EQ(true, active_object.is_working());
+        EXPECT_EQ(false, active_object.is_data_ready());
+        EXPECT_EQ(true, active_object.is_free());
+        EXPECT_EQ(false, active_object.is_data_ready());
+
+        int index = 0;
+        while (index < callback_count) {
+            if (active_object.is_free()) {
+                EXPECT_NO_THROW(active_object.execute_task_async(active_mock_collection[index]));
+                ++index;
+            } else {
+                wait(1000);
+            }
+        }
+
+        EXPECT_EQ(index, callback_count);
+        EXPECT_EQ(true, active_object.is_free());
+        EXPECT_NO_THROW(active_object.shutdown());
+    }
+
+    TEST_F(ActiveObjectSetup, ACTIVE_OBJECT_TEST_MANY_ACTIVITIES_WITH_EMPTY_CALLBACKS) {
+        ActiveCallBackMock::NOTIFY_TIME_MS = 5;
+        ActiveCallBackMock::NOTIFY_TIME_MS = 100;
+        setup_for_scenario_callback_create_many_activities_with_empty_callback();
+        NSActive::ActiveObject active_object;
+        EXPECT_NO_THROW(active_object.init());
+        EXPECT_EQ(true, active_object.is_working());
+        EXPECT_EQ(false, active_object.is_data_ready());
+        EXPECT_EQ(true, active_object.is_free());
+        EXPECT_EQ(false, active_object.is_data_ready());
+
+        int index = 0;
+        while (index < callback_count) {
+            if (active_object.is_free()) {
+                EXPECT_NO_THROW(active_object.execute_task_async(active_mock_collection[index]));
+                ++index;
+            } else {
+                wait(1000);
+            }
+        }
+
+        EXPECT_EQ(index, callback_count);
+        EXPECT_EQ(true, active_object.is_free());
+        EXPECT_NO_THROW(active_object.shutdown());
+    }
 
 } // namespace
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
+
+    FLAGS_logtostderr = true;
+    testing::InitGoogleTest(&argc, argv);
+
     return RUN_ALL_TESTS();
 }

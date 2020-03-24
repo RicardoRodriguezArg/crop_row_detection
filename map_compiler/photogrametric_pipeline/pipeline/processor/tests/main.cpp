@@ -32,6 +32,7 @@ namespace NSOrtho_Processing {
         ASSERT_EQ(feature_processing.getImagesProcessingCount(),
                   feature_processing.getFeatureExtractionContainer().size());
     }
+    /*
     TEST(ORTHO_PROCESSING_TASK, SIMPLE_MATCHING) {
         // parameters for Multithread processing
         const int max_thread_count{10};
@@ -40,7 +41,7 @@ namespace NSOrtho_Processing {
         feature_processing.extractKeypointFeature();
 
         feature_processing.FoundMatchedKeyPoints();
-    }
+    }*/
 } // namespace NSOrtho_Processing
 
 int main(int argc, char **argv) {

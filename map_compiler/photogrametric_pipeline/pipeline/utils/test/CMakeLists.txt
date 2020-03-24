@@ -19,6 +19,7 @@ target_link_libraries(${PROJECT_NAME}
     PIPELINE_UTILS::Pipeline_utils
     ${OpenCV_LIBS}
 	OpenCV
+	GTest::Main
 	
 )
 gtest_add_tests(TARGET      ${PROJECT_NAME}
