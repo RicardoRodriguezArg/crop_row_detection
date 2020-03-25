@@ -1,0 +1,8 @@
+get_filename_component(data_structure_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+if(NOT TARGET PIPELINE::DATA_STRUCTURE)
+    include("${data_structure_CMAKE_DIR}/data_structure-target.cmake")
+endif()
+
+#set(PIPELINE::DATA_STRUCTURE PIPELINE::DATA_STRUCTURE_LIB)
