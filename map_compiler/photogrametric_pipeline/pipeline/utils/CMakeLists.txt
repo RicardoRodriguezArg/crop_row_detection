@@ -11,6 +11,7 @@ add_library(PIPELINE_UTILS::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 include_directories(Pipeline_interfaces/include)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS} gflags
                       OpenCV
+                      glog
                       Pipeline_interfaces
                       )
 

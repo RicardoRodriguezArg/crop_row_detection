@@ -1,6 +1,7 @@
 #ifndef __ACTIVE_OBJECT_FIXTURE_H__
 #define __ACTIVE_OBJECT_FIXTURE_H__
 #include "utils/active/active_object.h"
+#include "utils/active/active_thread_pool.h"
 #include <chrono>
 #include <glog/logging.h>
 #include <gmock/gmock.h>

@@ -8,7 +8,7 @@
 #include <interfaces/active_callback_interface.h>
 #include <iostream>
 #include <thread>
-using namespace std::chrono_literals;
+
 namespace NSActive {
 
     class ActiveObject {
@@ -24,12 +24,12 @@ namespace NSActive {
 
         ~ActiveObject() { shutdown(); }
 
-        bool is_working() {
+        bool is_working() const {
             std::lock_guard<std::mutex> lock(mutex_);
             return is_working_;
         }
 
-        bool is_data_ready() {
+        bool is_data_ready() const {
             std::lock_guard<std::mutex> lock(mutex_);
             return data_ready_;
         }
@@ -68,8 +68,8 @@ namespace NSActive {
             }
         }
 
-        bool is_free() {
-            std::lock_guard<std::mutex> lock(mutex_);
+        bool is_free() const {
+            std::lock_guard<std::mutex> lock{mutex_};
             const bool first = (data_ready_ == false);
             const bool result = (first && (is_working_ == true));
             return result;
@@ -77,7 +77,7 @@ namespace NSActive {
 
         private:
         void set_task_to_execute(const std::shared_ptr<IActive> task) {
-            std::lock_guard<std::mutex> lock(mutex_);
+            std::lock_guard<std::mutex> lock{mutex_};
             task_to_execute = task;
             data_ready_ = true;
         }
@@ -86,7 +86,7 @@ namespace NSActive {
 
             while (is_working_) {
                 std::unique_lock<std::mutex> unique_lock(mutex_);
-
+                using namespace std::chrono_literals;
                 condition_variable_.wait_for(unique_lock, 10ms, [this] {
                     return data_ready_ == true || is_working_ == true;
                 });
@@ -110,7 +110,9 @@ namespace NSActive {
         bool is_working_ = {false};
         bool data_ready_ = {false};
         std::shared_ptr<IActive> task_to_execute = nullptr;
-        std::mutex mutex_;
+        // const correctness for syncronized access
+        // https://herbsutter.com/2013/05/24/gotw-6a-const-correctness-part-1-3/
+        mutable std::mutex mutex_;
         std::condition_variable condition_variable_;
         std::unique_ptr<std::thread> thread_ = nullptr;
     };
