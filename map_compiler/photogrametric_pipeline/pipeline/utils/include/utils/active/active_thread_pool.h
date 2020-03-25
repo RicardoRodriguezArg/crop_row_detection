@@ -2,6 +2,7 @@
 #define __ACTIVE_THREAD_POOL_H__
 #include "active_object.h"
 #include <algorithm>
+#include <cassert>
 #include <glog/logging.h>
 #include <queue>
 
@@ -9,7 +10,10 @@ namespace NSActive {
     class ThreadPool {
         public:
         explicit ThreadPool(const unsigned number_thread = std::thread::hardware_concurrency())
-            : thread_pool{number_thread - 1U} {}
+            : thread_pool{number_thread - 1U}, numbers_of_threads_(number_thread - 1U) {
+            LOG(INFO) << "Created Thread pool with number of thread: " << numbers_of_threads_;
+            assert(numbers_of_threads_ >= 1U && "Number of thread equal to Zero not allowed");
+        }
 
         ~ThreadPool() { stop_thread_pool(); }
 
@@ -35,6 +39,8 @@ namespace NSActive {
             }
         }
 
+        unsigned number_of_working_threads() const { return numbers_of_threads_; }
+
         void init() {
             if (thread_ == nullptr) {
                 std::for_each(std::begin(thread_pool), std::end(thread_pool),
@@ -52,6 +58,11 @@ namespace NSActive {
             }
         }
 
+        bool is_thread_pool_empty() const {
+            std::lock_guard<std::mutex> lock(mutex_);
+            return task_queue.empty();
+        }
+
         private:
         void add_task_to_queue(const std::shared_ptr<IActive> task) {
             std::lock_guard<std::mutex> lock(mutex_);
@@ -62,18 +73,22 @@ namespace NSActive {
             while (thread_pool_is_running_) {
                 std::unique_lock<std::mutex> unique_lock(mutex_);
                 using namespace std::chrono_literals;
-                condition_variable_.wait_for(unique_lock, 10ms,
+                condition_variable_.wait_for(unique_lock, 20ms,
                                              [this] { return !task_queue.empty(); });
 
                 if (!task_queue.empty() && thread_pool_is_running_) {
-                    const auto task = task_queue.front();
-                    task_queue.pop();
                     const auto thread_for_work_iterator = std::find_if(
                         std::begin(thread_pool), std::end(thread_pool),
                         [](const auto &active_worker) { return active_worker.is_free(); });
                     if (thread_for_work_iterator != std::end(thread_pool)) {
+                        const auto task = task_queue.front();
+                        task_queue.pop();
+                        LOG(INFO) << "Thread pool Executing task id: " << task->get_task_id();
+
                         (*thread_for_work_iterator).execute_task_async(task);
+
                     } else {
+
                         LOG(INFO)
                             << "Thread pool bussy, cannot find any thread free for process request";
                     }
@@ -87,8 +102,9 @@ namespace NSActive {
         std::vector<ActiveObject> thread_pool;
         std::unique_ptr<std::thread> thread_ = nullptr;
         bool thread_pool_is_running_ = false;
-        std::mutex mutex_;
+        mutable std::mutex mutex_;
         std::condition_variable condition_variable_;
+        const unsigned numbers_of_threads_;
     };
 } // namespace NSActive
 

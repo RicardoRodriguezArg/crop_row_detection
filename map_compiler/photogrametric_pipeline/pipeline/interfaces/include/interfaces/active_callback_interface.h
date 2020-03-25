@@ -18,6 +18,7 @@ namespace NSActive {
         virtual const IActiveCallBackExecutorShared &get_callback() const = 0;
         virtual void execute_task() = 0;
         virtual void notify_with_callback() = 0;
+        virtual int get_task_id() const = 0;
     };
 
 } // namespace NSActive

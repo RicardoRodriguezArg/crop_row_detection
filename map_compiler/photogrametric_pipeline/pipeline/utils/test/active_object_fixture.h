@@ -14,7 +14,7 @@ namespace {
     class ActiveMock : public NSActive::IActive {
         public:
         static int EXECUTE_TASK_DELAY_MS;
-        ActiveMock() : callback_interface_(nullptr) {}
+        explicit ActiveMock(const int id = 0) : callback_interface_(nullptr), task_id(id) {}
         void set_callback(const IActiveCallBackExecutorShared &callback_interface) override {
             callback_interface_ = callback_interface;
         }
@@ -26,12 +26,18 @@ namespace {
         void execute_task() override {
             std::chrono::milliseconds timespan(EXECUTE_TASK_DELAY_MS); // or whatever
             std::this_thread::sleep_for(timespan);
+            task_executed_ = true;
+            LOG(INFO) << "MOCK EXECUTING TASK : " << task_id;
+            callback_interface_->update_state(NSActive::TaskState::EXECUTED_OK);
         }
-
+        bool was_task_executed() const { return task_executed_; }
         void notify_with_callback() override { callback_interface_->notify(); }
+        int get_task_id() const override { return task_id; }
 
         private:
         IActiveCallBackExecutorShared callback_interface_;
+        bool task_executed_ = false;
+        const int task_id = -1;
     };
     int ActiveMock::EXECUTE_TASK_DELAY_MS = 200;
 
@@ -81,7 +87,7 @@ namespace {
             ActiveCallBackMock::NOTIFY_TIME_MS = 10;
             active_mock->set_callback(active_callback_mock);
             for (int index = 0; index < callback_count; ++index) {
-                active_mock_collection.emplace_back(std::make_shared<ActiveMock>());
+                active_mock_collection.emplace_back(std::make_shared<ActiveMock>(index));
                 active_callback_mock_collection.emplace_back(
                     std::make_shared<ActiveCallBackMock>());
                 active_mock_collection[index]->set_callback(active_callback_mock_collection[index]);
